@@ -1,0 +1,37 @@
+---
+import Card from '../Card.astro'
+import { LINKS } from '../../lib/constants'
+---
+
+<Card colSpan="md:col-span-1" rowSpan="md:row-span-4">
+  <div class="h-full">
+    <header class="flex items-center">
+      <h1 class="text-xl font-bold text-foreground">Давайте работать вместе</h1>
+    </header>
+    <address class="mt-4 flex flex-col">
+      <h2 class="text-gray-500">Контакты</h2>
+      <p>eldarmy@mail.ru</p>
+      <p>🇷🇺 Москва, Россия 🇷🇺</p>
+    </address>
+    <div class="mt-4 flex w-fit flex-col">
+      <h2 class="text-gray-500">Социальные сети</h2>
+      <ul>
+        <li>
+          <a href={LINKS.telegram} class="underline" target="_blank">Telegram</a
+          >
+        </li>
+        <li>
+          <a href={LINKS.github} class="underline" target="_blank">Github</a>
+        </li>
+        <li>
+          <a href={LINKS.instagram} class="underline" target="_blank"
+            >Instagram</a
+          >
+        </li>
+        <li>
+          <a href={LINKS.vk} class="underline" target="_blank">VK</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</Card>

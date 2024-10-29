@@ -1,0 +1,74 @@
+---
+import Card from '../Card.astro'
+---
+
+<Card colSpan="md:col-span-2" rowSpan="md:row-span-2" title="Обучение">
+  <div class="mt-2 flex w-full flex-wrap gap-2">
+    <h5 class="text-base font-bold">Высшее образование</h5>
+    <div class="flex w-full items-center gap-4">
+      <div
+        class="flex shrink-0 flex-col items-center justify-between"
+        style="min-width: 110px"
+      >
+        <span class="text-sm font-bold"> Сентябрь 2019 </span>
+        <span>|</span>
+        <span class="text-sm font-bold"> Июль 2023 </span>
+      </div>
+      <div class="flex flex-col gap-2">
+        <a
+          href="https://www.volgatech.net"
+          class="text-sm text-blue-500 underline hover:text-blue-700"
+          >Поволжский государственный технологический университет, Йошкар-Ола</a
+        >
+        <span class="text-xs"
+          >ФИиВТ, Программное обеспечение вычислительной техники и
+          автоматизированных систем</span
+        >
+      </div>
+    </div>
+    <h5 class="text-base font-bold">Дополнительное образование</h5>
+    <div class="flex w-full items-center gap-4">
+      <div
+        class="flex shrink-0 flex-col items-center justify-between"
+        style="min-width: 110px"
+      >
+        <span class="text-sm font-bold"> Февраль 2023 </span>
+        <span>|</span>
+        <span class="text-sm font-bold"> Март 2023 </span>
+      </div>
+      <div class="flex flex-col gap-2">
+        <a
+          href="https://stepik.org/"
+          class="text-sm text-blue-500 underline hover:text-blue-700">Stepik</a
+        >
+        <span class="text-xs">
+          Функциональное программирование на языке Haskell</span
+        >
+      </div>
+    </div>
+    <div class="bg-divider w-full rounded" style="height: 1px;"></div>
+    <div class="flex w-full items-center gap-4">
+      <div
+        class="flex shrink-0 flex-col items-center justify-between"
+        style="min-width: 110px"
+      >
+        <span class="text-sm font-bold"> Март 2023 </span>
+        <span>|</span>
+        <span class="text-sm font-bold"> Май 2023 </span>
+      </div>
+      <div class="flex flex-col gap-2">
+        <a
+          href="https://ru.hexlet.io/"
+          class="text-sm text-blue-500 underline hover:text-blue-700">Хекслет</a
+        >
+        <span class="text-xs"> JS: Архитектура фронтенда,</span>
+        <span class="text-xs">
+          JS: Предметно-ориентированное проектирование,</span
+        >
+        <span class="text-xs">
+          JS: Асинхронное программирование,React: Redux Toolkit</span
+        >
+      </div>
+    </div>
+  </div>
+</Card>
