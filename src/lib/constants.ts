@@ -1,4 +1,4 @@
-import type { Site, Page } from './types'
+import type { Site, Page, ProjectData } from './types'
 
 export const loaderAnimation = [
   '.loader',
@@ -11,7 +11,7 @@ export const LINKS = {
   vk: 'https://vk.com/id58690866',
   github: 'https://github.com/EldarMuhamethanov',
   linkedin: '',
-  mail: 'eldarmy@mail.ru',
+  mail: 'mailto:eldarmy@mail.ru',
   instagram: 'https://www.instagram.com/lol.kek.chebureck/',
   discord: '',
 }
@@ -26,20 +26,14 @@ export const SITE: Site = {
 
 // Work Page
 export const WORK: Page = {
-  TITLE: 'Work',
-  DESCRIPTION: 'Places I have worked.',
+  TITLE: 'Опыт работы',
+  DESCRIPTION: 'Места, где я работал и что делал.',
 }
 
 // Blog Page
 export const BLOG: Page = {
   TITLE: 'Blog',
   DESCRIPTION: 'Writing on topics I am passionate about.',
-}
-
-// Projects Page
-export const PROJECTS: Page = {
-  TITLE: 'Projects',
-  DESCRIPTION: 'Recent projects I have worked on.',
 }
 
 // Search Page
@@ -50,78 +44,120 @@ export const SEARCH: Page = {
 
 export const EXPERIENCE = [
   {
-    company: 'Straico',
-    location: 'Bogotá D C, Colombia',
-    position: 'Software Engineer',
-    start: '2021',
-    link: 'https://straico.com/',
-    end: 'Current',
-    tasks: [
-      'Integration IA services with react and tailwind css',
-      'Development and build of DB with mongoDB',
+    company: 'VK',
+    location: 'Россия',
+    position: 'Фронтенд разработчик',
+    start: 'Июнь 2024',
+    link: 'https://vk.com/',
+    end: 'Текущий момент',
+    tasks: [],
+    achievements: [],
+    stack: [
+      'Git',
+      'JavaScript',
+      'TypeScript',
+      'Redux',
+      'SCSS',
+      'React',
+      'Webpack',
+      'Адаптивная верстка',
+      'HTML',
+      'CSS',
     ],
   },
   {
-    company: 'Spot2',
-    location: 'Mexico City, Mexico',
-    position: 'Software Engineer',
-    link: 'https://spot2.mx/',
-    start: '2021',
-    end: 'Current',
+    company: 'Кибер-Ром',
+    location: 'Россия',
+    position: 'Фронтенд разработчик',
+    link: 'https://cyrm.ru',
+    start: 'Февраль 2024',
+    end: 'Май 2024',
     tasks: [
-      'Development of the Spot2 platform with the use of React, Redux, and Material UI',
-      'Development map with the use of Google Maps API',
-      'Development internal platform with the use of React, Redux, and Material UI',
-      'Testing and debugging',
+      'Реализация компонентов для uikit-а продукта',
+      'Разработка фич для продуктов компании',
+      'Избавление от легаси кода, рефакторинг',
+    ],
+    achievements: [
+      'Внес немалый вклад в рефакторинг проекта',
+      'Реализовал uikit для проекта',
+    ],
+    stack: [
+      'Git',
+      'JavaScript',
+      'TypeScript',
+      'Redux',
+      'SCSS',
+      'React',
+      'Webpack',
+      'Адаптивная верстка',
+      'HTML',
+      'CSS',
     ],
   },
   {
-    company: 'Imaginamos',
-    link: 'https://imaginamos.com/',
-    location: 'Bogotá D C, Colombia',
-    position: 'Frontend developer',
-    start: '2021',
-    end: '2021',
+    company: 'iSpring',
+    link: 'https://www.ispring.ru',
+    location: 'Йошкар-Ола, Россия',
+    position: 'Фронтенд разработчик',
+    start: 'Январь 2020',
+    end: 'Февраль 2024',
     tasks: [
-      'Development of the Imaginamos platform with the use of React, Redux, and Material UI',
-      'Work in ETB project with the use of React, Redux, and Material UI',
+      'Разработка продуктов для онлайн обучения.',
+      'Написание новых компонентов для внутреннего uikit-а, а также доработка существующих.',
+      'Разработка фич в продуктах iSpring Space, iSpring Learn (подробнее могу рассказать лично).',
+      'Проектирование, оценка, планирование и разработка фич.',
+      'Наставничество над стажерами.',
+      'Выполнение support-задач.',
+      'Доработки скриптов сборки.',
+      "Поддержание работоспособности кода путем написания Uinit-тестов, snapshot'ных тестов, а также скриншотных тестов для дизайн системы.",
+      'Поддержка работоспособности кода в основных браузерах: Chrome, Safari и Firefox.',
+    ],
+    achievements: [
+      'Внедрил чат GPT в редактор статей Roll для генерации и редактирования текста.',
+      'Внес большой вклад в рефакторинг редактора статей Roll, что привело к уменьшению легаси кода, что ускорило разработку будущих фич',
+      'Разрабатывал фичу "Совместное редактирование", что позволило нескольким пользователям работать надо одним документом',
+    ],
+    stack: [
+      'JavaScript',
+      'HTML',
+      'CSS',
+      'React',
+      'TypeScript',
+      'Кроссбраузерная верстка',
+      'Gulp',
+      'Веб-разработка',
+      'Node.js',
+      'Nuxt.js',
     ],
   },
+]
+
+export const PROJECTS: ProjectData[] = [
   {
-    company: 'INETUM',
-    location: 'Bogotá D C, Colombia',
-    position: 'Frontend developer',
-    start: '2021',
-    link: 'https://www.inetum.com/es',
-    end: '2021',
-    tasks: [
-      'Support in the QA area and bug review',
-      'Use of SCRUM methodology',
-      'Claro projects with the use of frameworks and libraries such as react and angular',
-      'Use of redux toolkit as aproposal which allowed a shorter development time when using this tool',
+    id: 'smart-portal',
+    name: 'Smart-portal',
+    photos: [
+      '/smart-portal/title-screen.png',
+      '/smart-portal/screen1.png',
+      '/smart-portal/screen2.png',
     ],
-  },
-  {
-    company: 'S I G',
-    location: 'Bogotá D C, Colombia',
-    position: 'Software developer',
-    start: '2021',
-    end: '2021',
-    tasks: [
-      'Development of a dashboard with react admin and chartjs for managing and entering information',
+    site: 'https://smart-portal.xyz/',
+    githubUrl: 'https://github.com/EldarMuhamethanov/smart-portal',
+    shortDescription:
+      'SmartPortal - ваш универсальный инструмент для взаимодействия со смарт-контрактами',
+    description: [
+      `С помощью данного приложения, помимо вызова методов контрака, можно получить необходимые данные о смарт-контракте в сети Ethereum.`,
+      `Например можно посмотреть ABI контракта, получить данные из слота в хранилище, исходный код, а также отслеживать события.`,
+      `Для работы с реальными сетями вам необходим кошелек Metamask. А для работы с локальными сетями необходимо развернуть узел hardhat или Foundry.`,
     ],
-  },
-  {
-    company: 'BOOKII',
-    location: 'Bogotá D C, Colombia',
-    position: 'Software developer',
-    start: '2019',
-    end: '2021',
-    tasks: [
-      'Productive collaborationwiththebackendteamforthecreationofthe conversationalclubs',
-      'Effective coding of conversational clubs following design guide lines and using the Redux statemanager',
-      'Creation of the Bookii page in Spanish and change of texts in cms',
-      'Generation of static posts using Gatsby and the Contentful cms for the Bookii blog',
+    stack: [
+      'React',
+      'MobX',
+      'Typescript',
+      'Next.js',
+      'i18next',
+      'Web3.js',
+      'Docker',
     ],
   },
 ]

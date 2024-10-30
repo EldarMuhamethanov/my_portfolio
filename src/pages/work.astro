@@ -3,6 +3,7 @@ import { WORK } from '../lib/constants'
 import BaseLayout from '../layouts/BaseLayout.astro'
 import TopLayout from '../layouts/TopLayout.astro'
 import BottomLayout from '../layouts/BottomLayout.astro'
+import { Badge } from '../components/ui/badge'
 
 import { EXPERIENCE } from '../lib/constants'
 ---
@@ -26,15 +27,36 @@ import { EXPERIENCE } from '../lib/constants'
               </div>
               <a
                 href={entry.link ?? ''}
-                class={`font-semibold ${entry?.link ? 'text-primary' : 'text-foreground'}`}
+                class={`font-semibold ${entry?.link ? 'text-primary' : 'text-foreground'} text-xl`}
               >
                 {entry.company}
               </a>
-              <div class="text-sm font-semibold">{entry.position}</div>
+              <div class="mb-2 text-base font-semibold">{entry.position}</div>
               <article class="prose dark:prose-invert">
-                {entry.tasks.map((i) => (
-                  <>{i}</>
-                ))}
+                {!!entry.tasks.length && (
+                  <h4 class="mb-2 text-sm font-bold">Обязанности</h4>
+                )}
+                <ul class="mb-4 list-inside list-disc">
+                  {entry.tasks.map((task) => (
+                    <li class="text-sm">{task}</li>
+                  ))}
+                </ul>
+                {!!entry.achievements.length && (
+                  <h4 class="mb-2 text-sm font-bold">Достижения</h4>
+                )}
+                <ul class="mb-4 list-inside  list-disc">
+                  {entry.achievements.map((task) => (
+                    <li class="text-sm">{task}</li>
+                  ))}
+                </ul>
+                {!!entry.stack.length && (
+                  <h4 class="mb-2 text-sm font-bold">Стек технологий</h4>
+                )}
+                <div class="flex flex-wrap gap-2">
+                  {entry.stack.map((item) => (
+                    <Badge variant="outline">{item}</Badge>
+                  ))}
+                </div>
               </article>
             </li>
           ))

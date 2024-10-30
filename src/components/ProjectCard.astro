@@ -1,30 +1,27 @@
 ---
 import { Card as ShadcnCard } from './ui/card'
 
+
 const {
-  as: Tag = 'a',
-  class: className,
-  href,
-  heading,
-  subheading,
-  imagePath,
-  altText,
+  id,
+  name,
+  photo,
+  shortDescription,
 } = Astro.props
 ---
 
-<Tag href={href} class={`${className}`} `>
+<a href={`project/${id}`} class="min-w-[300px] grow shrink-0 basis-[80px]">
   <ShadcnCard
-    className={`transfor-y-[-40%] align-start perspective-1200 group relative flex-none transform justify-start overflow-hidden shadow-lg transition duration-75 ease-in-out ${href ? 'cursor-pointer hover:border-primary' : ''} `}
+    className={`transfor-y-[-40%] align-start perspective-1200 group relative flex-none transform justify-start overflow-hidden shadow-lg transition duration-75 ease-in-out cursor-pointer hover:border-primary`}
   >
     <img
-      src={imagePath}
-      alt={altText}
+      src={photo}
       class="h-48 w-full rounded-2xl rounded-bl-none rounded-br-none object-cover"
       loading="eager"
     />
     <div class="flex flex-col gap-y-0.5 px-5 py-4">
-      <h1 class="text-lg font-medium">{heading}</h1>
-      <h2 class="text-muted-foreground">{subheading}</h2>
+      <h1 class="text-lg font-medium">{name}</h1>
+      <h2 class="text-muted-foreground">{shortDescription}</h2>
     </div>
 
     <slot />

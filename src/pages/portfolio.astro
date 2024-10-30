@@ -2,20 +2,31 @@
 import BaseLayout from '../layouts/BaseLayout.astro'
 import TopLayout from '../layouts/TopLayout.astro'
 import BottomLayout from '../layouts/BottomLayout.astro'
+import ProjectCard from '../components/ProjectCard.astro'
+import {PROJECTS} from '../lib/constants'
+
 ---
 
-<BaseLayout
-  title="Portfolio"
-  description="Projects and some clone's that I did"
->
+<BaseLayout title="Портфолио" description="Мои личные проекты">
   <main class="flex min-h-[80vh] flex-auto flex-col" transition:animate="slide">
     <TopLayout>
       <h2
-        class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0"
+        class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0 mb-3"
       >
-        Projects and clone's
+        Проекты
       </h2>
+      <span>Поскольку я в основном всегда работал в компаниях, поэтому я не успел еще собрать внушительное количество проектов</span>
     </TopLayout>
+    <div class="flex gap-5 flex-wrap max-w-[1024px]">
+      {PROJECTS.map(project => (
+        <ProjectCard
+          id={project.id}
+          name={project.name}
+          photo={project.photos[0]}
+          shortDescription={project.shortDescription}
+        />
+      ))}
+    </div>
     <BottomLayout size="xl">
       <div class="flex w-full flex-wrap justify-center gap-2"></div>
     </BottomLayout>

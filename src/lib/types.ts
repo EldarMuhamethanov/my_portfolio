@@ -7,14 +7,13 @@ export interface Site extends Page {
   AUTHOR: string
 }
 
-export type Links = {
-  TEXT: string
-  HREF: string
-}[]
-
-export type Socials = {
-  NAME: string
-  ICON: string
-  TEXT: string
-  HREF: string
-}[]
+export interface ProjectData {
+  id: string
+  name: string
+  photos: string[]
+  githubUrl?: string
+  site?: string
+  shortDescription: string
+  description: string[]
+  stack: string[]
+}
