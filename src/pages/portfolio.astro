@@ -4,31 +4,91 @@ import TopLayout from '../layouts/TopLayout.astro'
 import BottomLayout from '../layouts/BottomLayout.astro'
 import ProjectCard from '../components/ProjectCard.astro'
 import {PROJECTS} from '../lib/constants'
-
 ---
 
-<BaseLayout title="Портфолио" description="Мои личные проекты">
+<BaseLayout title="Портфолио" description="Коллекция моих проектов и разработок">
   <main class="flex min-h-[80vh] flex-auto flex-col" transition:animate="slide">
     <TopLayout>
-      <h2
-        class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0 mb-3"
-      >
-        Проекты
-      </h2>
-      <span>Поскольку я в основном всегда работал в компаниях, поэтому я не успел еще собрать внушительное количество проектов</span>
+      <div class="max-w-3xl mx-auto text-center px-4">
+        <h2 class="scroll-m-20 text-4xl font-bold tracking-tight first:mt-0 mb-6 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+          Мои Проекты
+        </h2>
+        <p class="text-lg text-muted-foreground mb-8">
+          Каждый проект — это уникальная история решения задач и создания ценности. 
+          Здесь собраны работы, демонстрирующие мой подход к разработке.
+        </p>
+      </div>
     </TopLayout>
-    <div class="flex gap-5 flex-wrap max-w-[1024px]">
-      {PROJECTS.map(project => (
-        <ProjectCard
-          id={project.id}
-          name={project.name}
-          photo={project.photos[0]}
-          shortDescription={project.shortDescription}
-        />
-      ))}
+
+    <div class="container mx-auto px-4">
+      <div class={`
+        grid gap-8 mx-auto
+        ${PROJECTS.length === 1 ? 'max-w-md' : 'max-w-7xl'}
+        ${PROJECTS.length === 2 ? 'md:grid-cols-2 max-w-3xl' : ''}
+        ${PROJECTS.length >= 3 ? 'md:grid-cols-2 lg:grid-cols-3' : ''}
+      `}>
+        {PROJECTS.map(project => (
+          <div class="transform hover:scale-105 transition-transform duration-200">
+            <ProjectCard
+              id={project.id}
+              name={project.name}
+              photo={project.photos[0]}
+              shortDescription={project.shortDescription}
+            />
+          </div>
+        ))}
+      </div>
+
+      {PROJECTS.length === 0 && (
+        <div class="text-center py-12 bg-muted/50 rounded-lg">
+          <div class="max-w-md mx-auto px-4">
+            <h3 class="text-xl font-semibold mb-2">Проекты в разработке</h3>
+            <p class="text-muted-foreground">
+              Сейчас я работаю над новыми проектами. Совсем скоро здесь появятся интересные работы!
+            </p>
+          </div>
+        </div>
+      )}
     </div>
+
     <BottomLayout size="xl">
-      <div class="flex w-full flex-wrap justify-center gap-2"></div>
+      <div class="w-full max-w-2xl mx-auto text-center px-4">
+        <h3 class="text-2xl font-semibold mb-4">Давайте создадим что-то вместе</h3>
+        <p class="text-muted-foreground mb-6">
+          Открыт для обсуждения новых проектов и интересных идей. 
+          Свяжитесь со мной, чтобы обсудить возможности сотрудничества.
+        </p>
+        <a 
+          href="mailto:eldarmy@mail.ru" 
+          class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary hover:bg-primary/90 transition-colors"
+        >
+          Связаться со мной
+        </a>
+      </div>
     </BottomLayout>
   </main>
 </BaseLayout>
+
+<style>
+  .container {
+    animation: fadeIn 0.5s ease-in;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .container {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+  }
+</style>

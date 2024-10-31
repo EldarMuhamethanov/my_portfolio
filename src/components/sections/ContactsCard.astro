@@ -1,38 +1,90 @@
 ---
 import Card from '../Card.astro'
 import { LINKS } from '../../lib/constants'
+import { Icons } from '../../lib/icons'
+
+const EmailIcon = Icons.email
+const LocationIcon = Icons.location
+const TelegramIcon = Icons.telegram
+const GithubIcon = Icons.github
+const InstagramIcon = Icons.instagram
+const VKIcon = Icons.vk
+
 ---
 
 <Card colSpan="md:col-span-1" rowSpan="md:row-span-4">
-  <div class="h-full">
-    <header class="flex items-center">
-      <h1 class="text-xl font-bold text-foreground">Давайте работать вместе</h1>
-    </header>
-    <address class="mt-4 flex flex-col">
-      <h2 class="text-gray-500">Контакты</h2>
-      <p>eldarmy@mail.ru</p>
-      <p>eldarmu.1@gmail.com</p>
-      <p>🇷🇺 Москва, Россия 🇷🇺</p>
-    </address>
-    <div class="mt-4 flex w-fit flex-col">
-      <h2 class="text-gray-500">Социальные сети</h2>
-      <ul>
-        <li>
-          <a href={LINKS.telegram} class="underline" target="_blank">Telegram</a
-          >
-        </li>
-        <li>
-          <a href={LINKS.github} class="underline" target="_blank">Github</a>
-        </li>
-        <li>
-          <a href={LINKS.instagram} class="underline" target="_blank"
-            >Instagram</a
-          >
-        </li>
-        <li>
-          <a href={LINKS.vk} class="underline" target="_blank">VK</a>
-        </li>
-      </ul>
+  <div class="h-full space-y-4">
+    <h1 class="text-xl font-bold text-foreground">
+      Давайте работать вместе
+    </h1>
+    <!-- Краткое описание -->
+    <p class="text-sm">
+      Открыт к интересным проектам и сотрудничеству. Готов обсудить ваши идеи и предложения.
+    </p>
+
+
+    <div class="space-y-2">
+      <h2 class="text-sm font-medium text-gray-500">Контакты</h2>
+      <div class="space-y-2 text-sm">
+        <p class="flex items-center gap-2">
+          <EmailIcon />
+          eldarmy@mail.ru
+        </p>
+        <p class="flex items-center gap-2">
+          <EmailIcon />
+          eldarmu.1@gmail.com
+        </p>
+        <p class="flex items-center gap-2">
+          <LocationIcon/>
+          🇷🇺 Москва, Россия
+        </p>
+      </div>
+    </div>
+    <!-- Рабочие часы -->
+    <div class="space-y-2">
+      <h2 class="text-sm font-medium">Рабочие часы</h2>
+      <p class="text-sm">
+        Пн-Пт: 10:00 - 19:00 (МСК)
+      </p>
+    </div>
+
+
+    <div class="space-y-2">
+      <h2 class="text-sm font-medium">Социальные сети</h2>
+      <div class="flex flex-col gap-2">
+        <a
+          href={LINKS.telegram}
+          class="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100 transition-colors"
+          target="_blank"
+        >
+          <TelegramIcon />
+          <span class="text-sm">Telegram</span>
+        </a>
+        <a
+          href={LINKS.github}
+          class="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100 transition-colors"
+          target="_blank"
+        >
+          <GithubIcon />
+          <span class="text-sm">Github</span>
+        </a>
+        <a
+          href={LINKS.instagram}
+          class="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100 transition-colors"
+          target="_blank"
+        >
+          <InstagramIcon />
+          <span class="text-sm">Instagram</span>
+        </a>
+        <a
+          href={LINKS.vk}
+          class="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100 transition-colors"
+          target="_blank"
+        >
+          <VKIcon />
+          <span class="text-sm">VK</span>
+        </a>
+      </div>
     </div>
   </div>
 </Card>

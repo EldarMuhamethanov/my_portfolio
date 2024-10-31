@@ -3,72 +3,88 @@ import Card from '../Card.astro'
 ---
 
 <Card colSpan="md:col-span-2" rowSpan="md:row-span-2" title="Обучение">
-  <div class="mt-2 flex w-full flex-wrap gap-2">
-    <h5 class="text-base font-bold">Высшее образование</h5>
-    <div class="flex w-full items-center gap-4">
-      <div
-        class="flex shrink-0 flex-col items-center justify-between"
-        style="min-width: 110px"
-      >
-        <span class="text-sm font-bold"> Сентябрь 2019 </span>
-        <span>|</span>
-        <span class="text-sm font-bold"> Июль 2023 </span>
+  <div class="mt-4 flex w-full flex-col space-y-8">
+    <!-- Высшее образование -->
+    <section>
+      <h5 class="mb-4 text-lg font-semibold text-zinc-800 dark:text-zinc-100">
+        Высшее образование
+      </h5>
+      <div class="group relative rounded-lg bg-card/50 p-4 transition-all hover:bg-card/80">
+        <div class="flex flex-col gap-4 sm:flex-row">
+          <div class="flex shrink-0 flex-col items-center justify-between space-y-2 text-zinc-600 dark:text-zinc-400 min-w-[110px]">
+            <span class="text-sm font-semibold">Сентябрь 2019</span>
+            <div class="h-full w-0.5 rounded-full bg-zinc-200 dark:bg-zinc-700"></div>
+            <span class="text-sm font-semibold">Июль 2023</span>
+          </div>
+          <div class="flex flex-col gap-2">
+            <a
+              href="https://www.volgatech.net"
+              class="group/link text-base font-medium text-zinc-800 transition-colors hover:text-zinc-600 dark:text-zinc-200 dark:hover:text-zinc-400"
+            >
+              Поволжский государственный технологический университет
+              <span class="ml-1 inline-block transition-transform group-hover/link:translate-x-1">→</span>
+            </a>
+            <span class="text-sm text-zinc-600 dark:text-zinc-400">
+              ФИиВТ, Программное обеспечение вычислительной техники и автоматизированных систем
+            </span>
+          </div>
+        </div>
       </div>
-      <div class="flex flex-col gap-2">
-        <a
-          href="https://www.volgatech.net"
-          class="text-sm text-blue-500 underline hover:text-blue-700"
-          >Поволжский государственный технологический университет, Йошкар-Ола</a
-        >
-        <span class="text-xs"
-          >ФИиВТ, Программное обеспечение вычислительной техники и
-          автоматизированных систем</span
-        >
+    </section>
+
+    <!-- Дополнительное образование -->
+    <section>
+      <h5 class="mb-4 text-lg font-semibold text-zinc-800 dark:text-zinc-100">
+        Дополнительное образование
+      </h5>
+      
+      <!-- Stepik
+      <div class="group relative mb-4 rounded-lg bg-card/50 p-4 transition-all hover:bg-card/80">
+        <div class="flex flex-col gap-4 sm:flex-row">
+          <div class="flex shrink-0 flex-col items-center justify-between space-y-2 text-zinc-600 dark:text-zinc-400 min-w-[110px]">
+            <span class="text-sm font-semibold">Февраль 2023</span>
+            <div class="h-full w-0.5 rounded-full bg-zinc-200 dark:bg-zinc-700"></div>
+            <span class="text-sm font-semibold">Март 2023</span>
+          </div>
+          <div class="flex flex-col gap-2">
+            <a
+              href="https://stepik.org/"
+              class="group/link text-base font-medium text-zinc-800 transition-colors hover:text-zinc-600 dark:text-zinc-200 dark:hover:text-zinc-400"
+            >
+              Stepik
+              <span class="ml-1 inline-block transition-transform group-hover/link:translate-x-1">→</span>
+            </a>
+            <span class="text-sm text-zinc-600 dark:text-zinc-400">
+              Функциональное программирование на языке Haskell
+            </span>
+          </div>
+        </div>
+      </div> -->
+
+      <!-- Хекслет -->
+      <div class="group relative rounded-lg bg-card/50 p-4 transition-all hover:bg-card/80">
+        <div class="flex flex-col gap-4 sm:flex-row">
+          <div class="flex shrink-0 flex-col items-center justify-between space-y-2 text-zinc-600 dark:text-zinc-400 min-w-[110px]">
+            <span class="text-sm font-semibold">Март 2023</span>
+            <div class="h-full w-0.5 rounded-full bg-zinc-200 dark:bg-zinc-700"></div>
+            <span class="text-sm font-semibold">Май 2023</span>
+          </div>
+          <div class="flex flex-col gap-2">
+            <a
+              href="https://ru.hexlet.io/"
+              class="group/link text-base font-medium text-zinc-800 transition-colors hover:text-zinc-600 dark:text-zinc-200 dark:hover:text-zinc-400"
+            >
+              Хекслет
+              <span class="ml-1 inline-block transition-transform group-hover/link:translate-x-1">→</span>
+            </a>
+            <div class="flex flex-col space-y-1 text-sm text-zinc-600 dark:text-zinc-400">
+              <span>JS: Архитектура фронтенда</span>
+              <span>JS: Предметно-ориентированное проектирование</span>
+              <span>JS: Асинхронное программирование, React: Redux Toolkit</span>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-    <h5 class="text-base font-bold">Дополнительное образование</h5>
-    <div class="flex w-full items-center gap-4">
-      <div
-        class="flex shrink-0 flex-col items-center justify-between"
-        style="min-width: 110px"
-      >
-        <span class="text-sm font-bold"> Февраль 2023 </span>
-        <span>|</span>
-        <span class="text-sm font-bold"> Март 2023 </span>
-      </div>
-      <div class="flex flex-col gap-2">
-        <a
-          href="https://stepik.org/"
-          class="text-sm text-blue-500 underline hover:text-blue-700">Stepik</a
-        >
-        <span class="text-xs">
-          Функциональное программирование на языке Haskell</span
-        >
-      </div>
-    </div>
-    <div class="bg-divider w-full rounded" style="height: 1px;"></div>
-    <div class="flex w-full items-center gap-4">
-      <div
-        class="flex shrink-0 flex-col items-center justify-between"
-        style="min-width: 110px"
-      >
-        <span class="text-sm font-bold"> Март 2023 </span>
-        <span>|</span>
-        <span class="text-sm font-bold"> Май 2023 </span>
-      </div>
-      <div class="flex flex-col gap-2">
-        <a
-          href="https://ru.hexlet.io/"
-          class="text-sm text-blue-500 underline hover:text-blue-700">Хекслет</a
-        >
-        <span class="text-xs"> JS: Архитектура фронтенда,</span>
-        <span class="text-xs">
-          JS: Предметно-ориентированное проектирование,</span
-        >
-        <span class="text-xs">
-          JS: Асинхронное программирование,React: Redux Toolkit</span
-        >
-      </div>
-    </div>
+    </section>
   </div>
 </Card>

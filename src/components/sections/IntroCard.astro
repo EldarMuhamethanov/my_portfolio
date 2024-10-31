@@ -2,50 +2,100 @@
 import Card from '../Card.astro'
 import { Button } from '../ui/button'
 import { LINKS } from '../../lib/constants'
-import { Linkedin, Github, Mail } from 'lucide-react'
+import { Github, Mail } from 'lucide-react'
 ---
 
-<Card colSpan="md:col-span-3" rowSpan="md:row-span-4">
-  <div class="flex h-full w-full">
-    <div class="flex flex-col justify-between gap-4 md:max-h-[300px]">
+<Card colSpan="md:col-span-3" rowSpan="md:row-span-4" variant='default'>
+  <div class="flex h-full w-full overflow-hidden relative">
+
+    <div class="flex flex-col justify-between gap-6 z-10 w-full">
       <div class="flex h-full flex-col">
-        <h6 class="m-0 text-sm font-light text-gray-500">Добро пожаловать</h6>
-        <p class="m-0 text-xl font-light">
-          Привет! Я <b class="font-bold">Эльдар</b> — фронтенд-разработчик, который
-          превращает пиксели в эмоции, а код в удовольствие от использования. Создаю
-          интерфейсы, в которые влюбляются пользователи, и решения, которыми гордятся
-          клиенты. С <b class="font-bold">React</b> мы на "ты", <b
-            class="font-bold">JavaScript</b
-          > знаю как свои пять пальцев, а чистый код — моё второе имя.
-        </p>
+        <!-- Анимированный заголовок -->
+        <h6 class="m-0 text-sm font-medium tracking-wider uppercase animate-fade-in">
+          Добро пожаловать
+        </h6>
+        
+        <!-- Основной текст с улучшенной типографикой -->
+        <div class="mt-4 space-y-4">
+          <p class="m-0 text-2xl font-light leading-relaxed">
+            Привет! Я <span class="font-bold text-blue-700 relative">
+              Эльдар
+              <span class="absolute bottom-0 left-0 w-full h-1 bg-blue-200 transform -skew-x-12"></span>
+            </span> — фронтенд-разработчик, который превращает пиксели в эмоции, а код в удовольствие от использования.
+          </p>
+          
+          <p class="text-lg leading-relaxed">
+            Создаю интерфейсы, в которые влюбляются пользователи, и решения, которыми гордятся клиенты. С 
+            <span class="font-semibold text-blue-600">React</span> мы на "ты", 
+            <span class="font-semibold text-yellow-600">JavaScript</span> знаю как свои пять пальцев, 
+            а чистый код — моё второе имя.
+          </p>
+        </div>
       </div>
-      <div class="flex gap-4">
-        <a href={LINKS.github} aria-label="github profile" target="_blank">
-          <Button aria-label="github profile">
-            <Github />
-            <span class="sr-only">GitHub Profile</span>
+
+      <!-- Улучшенные кнопки социальных сетей -->
+      <div class="flex gap-4 mb-2 ml-2">
+        <a 
+          href={LINKS.github} 
+          aria-label="github profile" 
+          target="_blank"
+          class="transform transition-transform hover:scale-110"
+        >
+          <Button 
+            className="bg-gray-800 hover:bg-gray-900 text-white rounded-xl px-6 py-3 flex items-center gap-2"
+          >
+            <Github className="w-5 h-5" />
+            <span class="hidden md:inline">GitHub</span>
           </Button>
         </a>
-        <!-- <a href={LINKS.linkedin} aria-label="linkeding profile" target="_blank">
-          <Button aria-label="linkedin profile">
-            <Linkedin />
-            <span class="sr-only">Linkedin Profile</span>
-          </Button>
-        </a> -->
-        <a href={LINKS.mail} aria-label="mail profile" target="_blank">
-          <Button>
-            <Mail />
-            <span class="sr-only">Email contact</span>
+
+        <a 
+          href={LINKS.mail} 
+          aria-label="mail profile" 
+          target="_blank"
+          class="transform transition-transform hover:scale-110"
+        >
+          <Button 
+            className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-6 py-3 flex items-center gap-2"
+          >
+            <Mail className="w-5 h-5" />
+            <span class="hidden md:inline">Email</span>
           </Button>
         </a>
       </div>
     </div>
+
+    <!-- Улучшенное изображение с анимацией -->
     <img
       width="300"
       height="300"
       src="/me.png"
-      class="pointer-events-none absolute bottom-[-20px] right-[-110px] z-[-1] max-h-[300px] w-auto select-none opacity-50 md:relative md:bottom-auto md:right-auto md:z-auto md:opacity-100"
+      class="pointer-events-none absolute bottom-[-50px] right-[-130px] z-[1] max-h-[300px] w-auto select-none 
+        opacity-90 transition-transform duration-300 hover:scale-105
+        md:relative md:bottom-auto md:right-auto md:z-auto md:opacity-100 mt-10
+        animate-float"
       alt="memoji of andres plaza"
     />
   </div>
 </Card>
+
+<style>
+  @keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+  }
+
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.5s ease-out forwards;
+  }
+</style>

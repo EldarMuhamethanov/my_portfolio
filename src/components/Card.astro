@@ -10,31 +10,89 @@ interface Props {
   rowSpan?: string
   href?: string
   colorText?: string
+  variant?: 'default' | 'gradient' | 'glass'
 }
 
-const { title, body, colSpan, rowSpan, href, colorText } = Astro.props
+const { title, body, colSpan, rowSpan, href, colorText, variant = 'default' } = Astro.props
+
+const variants = {
+  default: 'bg-white dark:bg-gray-800',
+  gradient: 'bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900',
+  glass: 'backdrop-blur-md bg-white/30 dark:bg-gray-800/30'
+}
+
 ---
 
 <ShadcnCard
-  className={`card-animate transfor-y-[-40%] align-start perspective-1200 group group relative col-span-1 h-auto w-full flex-none transform justify-start overflow-hidden p-6 shadow-lg transition duration-75 ease-in-out ${
-    colSpan || 'md:col-span-2'
-  } ${rowSpan || ''} ${href ? 'cursor-pointer hover:border-primary' : ''}`}
+  className={
+    `card-animate 
+    group 
+    relative 
+    col-span-1 
+    h-auto 
+    w-full 
+    overflow-hidden
+    ${variants[variant]}
+    ${colSpan || 'md:col-span-2'}
+    ${rowSpan || ''}
+    ${href ? 'cursor-pointer' : ''}
+    transform 
+    transition-all 
+    duration-300 
+    ease-out
+    hover:shadow-xl
+    dark:shadow-gray-900/30
+    border border-gray-200 dark:border-gray-700
+    hover:border-primary/50
+    hover:-translate-y-1
+    rounded-xl
+    p-6`
+  }
 >
+  {/* Декоративный фоновый элемент */}
+  <div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
   {
     href ? (
-      <a href={href} class={`block h-full w-full ${colorText || ' '}`}>
+      <a 
+        href={href} 
+        class={`
+          block h-full w-full 
+          ${colorText || 'text-gray-800 dark:text-gray-200'}
+          relative z-10
+        `}
+      >
         <SquareArrowOutUpRight
-          className="group-hover:text-primary position absolute right-6 "
+          className={`
+            absolute 
+            right-0 
+            top-0
+            opacity-0
+            group-hover:opacity-100
+            group-hover:text-primary
+            transform
+            transition-all
+            duration-300
+            group-hover:translate-x-1
+            group-hover:-translate-y-1
+          `}
           size={20}
         />
+        
         <ContentCard title={title} body={body}>
           <slot />
         </ContentCard>
       </a>
     ) : (
-      <ContentCard title={title} body={body}>
-        <slot />
-      </ContentCard>
+      <div class="relative z-10">
+        <ContentCard title={title} body={body}>
+          <slot />
+        </ContentCard>
+      </div>
     )
   }
+
+  {/* Декоративный border эффект */}
+  <div class="absolute inset-0 border border-primary/0 group-hover:border-primary/20 rounded-xl transition-colors duration-300"></div>
 </ShadcnCard>
+
