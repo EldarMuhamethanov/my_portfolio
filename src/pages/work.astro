@@ -12,7 +12,7 @@ import { EXPERIENCE } from '../lib/constants'
   <main class="flex min-h-[80vh] flex-auto flex-col" transition:animate="fade">
     <TopLayout>
       <h2
-        class="scroll-m-20 text-4xl font-bold tracking-tight first:mt-0 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent"
+        class="scroll-m-20 text-4xl font-bold tracking-tight first:mt-0"
       >
         {WORK.TITLE}
       </h2>
@@ -31,11 +31,7 @@ import { EXPERIENCE } from '../lib/constants'
               <a
                 href={entry?.link}
                 target="_blank"
-                class={`group/link block font-bold ${
-                  entry?.link 
-                    ? 'text-primary hover:text-primary/80' 
-                    : 'text-foreground'
-                } text-2xl transition-colors`}
+                class={`group/link block font-bold text-foreground text-2xl transition-colors`}
               >
                 {entry.company}
                 {entry?.link && (
