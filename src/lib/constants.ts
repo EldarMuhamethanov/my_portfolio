@@ -137,9 +137,9 @@ export const PROJECTS: ProjectData[] = [
     id: 'smart-portal',
     name: 'Smart-portal',
     photos: [
-      '/smart-portal/title-screen.png',
-      '/smart-portal/screen1.png',
-      '/smart-portal/screen2.png',
+      `${import.meta.env.BASE_URL}/smart-portal/title-screen.png`,
+      `${import.meta.env.BASE_URL}/smart-portal/screen1.png`,
+      `${import.meta.env.BASE_URL}/smart-portal/screen2.png`,
     ],
     site: 'https://smart-portal.xyz/',
     githubUrl: 'https://github.com/EldarMuhamethanov/smart-portal',

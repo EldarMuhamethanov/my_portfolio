@@ -3,6 +3,7 @@ import Card from '../Card.astro'
 import { Button } from '../ui/button'
 import { LINKS } from '../../lib/constants'
 import { Github, Mail } from 'lucide-react'
+
 ---
 
 <Card colSpan="md:col-span-3" rowSpan="md:row-span-4" variant='default'>
@@ -69,7 +70,7 @@ import { Github, Mail } from 'lucide-react'
     <img
       width="300"
       height="300"
-      src="/me.png"
+      src={`${import.meta.env.BASE_URL}/me.png`}
       class="pointer-events-none absolute bottom-[-50px] right-[-130px] z-[1] max-h-[300px] w-auto select-none 
         opacity-90 transition-transform duration-300 hover:scale-105
         md:relative md:bottom-auto md:right-auto md:z-auto md:opacity-100 mt-10
