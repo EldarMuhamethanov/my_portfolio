@@ -16,7 +16,7 @@ import StudyCard from '../components/sections/StudyCard.astro'
   import { stagger, spring, timeline, type TimelineDefinition } from 'motion'
   import { loaderAnimation } from '../lib/constants'
 
-  const cards = document.querySelectorAll('.card-animate')
+  const cards = document.querySelectorAll<HTMLElement>('.card-animate')
 
   const sequence = [
     loaderAnimation,
@@ -32,7 +32,11 @@ import StudyCard from '../components/sections/StudyCard.astro'
     ],
   ]
 
-  timeline(sequence as TimelineDefinition)
+  await timeline(sequence as TimelineDefinition).finished
+  cards.forEach(card => {
+    card.style.transform = ''
+    card.style.opacity = ''
+  })
 </script>
 
 <BaseLayout

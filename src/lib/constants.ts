@@ -137,6 +137,7 @@ export const PROJECTS: ProjectData[] = [
     id: 'smart-portal',
     name: 'Smart-portal',
     photos: [
+      `${import.meta.env.BASE_URL}/smart-portal/logo.png`,
       `${import.meta.env.BASE_URL}/smart-portal/title-screen.png`,
       `${import.meta.env.BASE_URL}/smart-portal/screen1.png`,
       `${import.meta.env.BASE_URL}/smart-portal/screen2.png`,

@@ -18,7 +18,7 @@ import { buttonVariants } from '../components/ui/button'
       <p class="mb-4 leading-7 [&:not(:first-child)]:mt-6">
         Извините, такой страницы не существует.
       </p>
-      <a href="/" rel="noreferrer" class={buttonVariants()}
+      <a href={import.meta.env.BASE_URL} rel="noreferrer" class={buttonVariants()}
         >Вернуться на домашнюю страницу</a
       >
     </div>
