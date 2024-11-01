@@ -5,22 +5,74 @@ import { EXPERIENCE } from '../../lib/constants'
 ---
 
 <Card colSpan="md:col-span-1" rowSpan="md:row-span-2" title="Опыт работы">
-  <div class="mt-2 space-y-4">
+  <div class="flex flex-col gap-4">
     {
       EXPERIENCE.slice(0, 3).map((exp) => (
-        <div>
-          <a class="text-lg font-semibold" href={exp?.link ?? ''}>
-            {exp.company}
-          </a>
-          <h4 class="text-sm text-primary/70">{exp.position}</h4>
-          <p class="text-sm text-foreground">
-            {exp.start} - {exp.end}
-          </p>
+        <div class="flex flex-col gap-1 border-l-2 border-primary/20 pl-4 transition-all hover:border-primary">
+          <div class="flex items-start justify-between flex-col">
+            <a 
+              class="text-lg font-semibold hover:text-primary transition-colors w-full" 
+              href={exp?.link ?? ''}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {exp.company}
+            </a>
+            <span class="flex items-center gap-1 text-xs text-muted-foreground">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="h-4 w-4"
+              >
+                <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+              </svg>
+              {exp.start} - {exp.end}
+            </span>
+          </div>
+          
+          <div class="flex items-center gap-2">
+            <h4 class="text-sm font-medium text-muted-foreground">
+              {exp.position}
+            </h4>
+          </div>
         </div>
       ))
     }
-    <a href={`${import.meta.env.BASE_URL}/work`}>
-      <Button variant="default" size="sm" className="mt-4"> Узнать больше </Button>
+    
+    <a 
+      href={`${import.meta.env.BASE_URL}/work`}
+      class="inline-flex w-fit transition-transform hover:translate-x-1"
+    >
+      <Button 
+        variant="default" 
+        size="sm" 
+        className="group mt-2 flex items-center gap-2"
+      >
+        Узнать больше
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="h-4 w-4 transition-transform group-hover:translate-x-1"
+        >
+          <path d="M5 12h14" />
+          <path d="m12 5 7 7-7 7" />
+        </svg>
+      </Button>
     </a>
   </div>
 </Card>
