@@ -4,7 +4,7 @@ import tailwind from '@astrojs/tailwind'
 
 const SERVER_PORT = 3000
 const LOCALHOST_URL = `http://localhost:${SERVER_PORT}`
-const LIVE_URL = 'https://EldarMuhamethanov.github.io'
+const LIVE_URL = 'https://eldar-m10v.ru'
 
 const SCRIPT = process.env.npm_lifecycle_script || ''
 const isBuild = SCRIPT.includes('astro build')
@@ -17,7 +17,7 @@ if (isBuild) {
 export default defineConfig({
   server: { port: SERVER_PORT },
   site: BASE_URL,
-  base: '/my_portfolio',
+  base: isBuild ? undefined : '/my_portfolio',
   integrations: [
     react(),
     tailwind({
