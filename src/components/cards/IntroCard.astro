@@ -1,5 +1,5 @@
 ---
-import Card from '../Card.astro'
+import Card from '../common/Card.astro'
 import { Button } from '../ui/button'
 import { LINKS } from '../../lib/constants'
 import { Icons } from '../../lib/icons'
@@ -9,7 +9,7 @@ const EmailIcon = Icons['email'];
 
 ---
 
-<Card colSpan="md:col-span-3" rowSpan="md:row-span-4" variant='default'>
+<Card colSpan="lg:col-span-3 md:col-span-2 sm:col-span-2" rowSpan="lg:row-span-4 md:row-span-2" variant='default'>
   <div class="flex h-full w-full overflow-hidden relative">
 
     <div class="flex flex-col justify-between gap-6 z-10 w-full">

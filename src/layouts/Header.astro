@@ -2,7 +2,7 @@
 import { buttonVariants } from '../components/ui/button'
 import { ModeToggle } from '../components/ui/ThemeToggle'
 import { JOB_STATUS } from '../lib/constants'
-import JobStatusBadge from './JobStatusBadge.astro'
+import JobStatusBadge from '../components/common/JobStatusBadge.astro'
 ---
 
 <script is:inline>
@@ -30,17 +30,9 @@ import JobStatusBadge from './JobStatusBadge.astro'
         <span class="inline-block font-bold">EldarMuhamethanov</span>
       </a>
     </div>
-    <div class="flex flex-1 items-center justify-end space-x-4">
-      <nav class="flex items-center space-x-1 gap-2">
+    <div class="flex flex-1 items-center justify-end space-x-4 shrink-0">
+      <nav class="flex items-center space-x-1 gap-2 shrink-0">
         <JobStatusBadge status={JOB_STATUS} />
-        <a
-          href="https://github.com/EldarMuhamethanov"
-          target="_blank"
-          rel="noreferrer"
-          class={buttonVariants({ variant: 'ghost' })}
-        >
-          GitHub
-        </a>
         <ModeToggle transition:persist client:load />
       </nav>
     </div>

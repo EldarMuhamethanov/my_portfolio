@@ -1,10 +1,10 @@
 ---
-import Card from '../Card.astro'
+import Card from '../common/Card.astro'
 import { Button } from '../ui/button'
 import { EXPERIENCE } from '../../lib/constants'
 ---
 
-<Card colSpan="md:col-span-1" rowSpan="md:row-span-2" title="Опыт работы">
+<Card colSpan="md:col-span-1" rowSpan="lg:row-span-2 md:row-span-4" title="Опыт работы">
   <div class="flex flex-col gap-4">
     {
       EXPERIENCE.slice(0, 3).map((exp) => (
