@@ -21,7 +21,7 @@ import { EXPERIENCE } from '../lib/constants'
       <ul class="space-y-12">
         {
           EXPERIENCE.map((entry) => (
-            <li class="animate group relative rounded-xl bg-card p-6 shadow-sm transition-all hover:shadow-md dark:bg-card/5">
+            <li class="animate group relative rounded-xl bg-card p-6 shadow-sm transition-all hover:shadow-md  dark:bg-gray-800">
               <div class="absolute -left-3 top-0 h-full w-1 bg-primary/30 group-hover:bg-primary" />
               
               <div class="mb-4 inline-block rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
@@ -76,7 +76,7 @@ import { EXPERIENCE } from '../lib/constants'
                 <div class="flex flex-wrap gap-2">
                   {entry.stack.map((item) => (
                     <Badge 
-                      variant="outline" 
+                      variant="default" 
                       className="transition-colors hover:bg-primary hover:text-primary-foreground"
                     >
                       {item}

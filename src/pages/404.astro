@@ -10,7 +10,7 @@ import { buttonVariants } from '../components/ui/button'
 >
   <main class="flex h-[80vh] flex-auto">
     <div class="flex flex-col items-center justify-center px-8">
-      <img src={`${import.meta.env.BASE_URL}/me_hello.png`} alt="404" class="mb-8 size-64" />
+      <img src="/me_hello.png" alt="404" class="mb-8 size-64" />
       <p class="text-sm text-muted-foreground">404</p>
       <h1 class="text-4xl font-extrabold tracking-tight lg:text-5xl">
         Страница не найдена
@@ -18,7 +18,7 @@ import { buttonVariants } from '../components/ui/button'
       <p class="mb-4 leading-7 [&:not(:first-child)]:mt-6">
         Извините, такой страницы не существует.
       </p>
-      <a href={import.meta.env.BASE_URL} rel="noreferrer" class={buttonVariants()}
+      <a href="/" rel="noreferrer" class={buttonVariants()}
         >Вернуться на домашнюю страницу</a
       >
     </div>

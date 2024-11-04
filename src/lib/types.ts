@@ -17,3 +17,17 @@ export interface ProjectData {
   description: string[]
   stack: string[]
 }
+
+export interface ExperienceData {
+  company: string
+  location: string
+  position: string
+  link: string
+  start: string
+  end: string
+  tasks: string[]
+  achievements: string[]
+  stack: string[]
+}
+
+export type JobStatus = 'not-looking' | 'looking' | 'open-to-work'

@@ -1,7 +1,7 @@
 ---
+import { Icons } from '../lib/icons'
 import ContentCard from './ContentCard.astro'
 import { Card as ShadcnCard } from './ui/card'
-import { SquareArrowOutUpRight } from 'lucide-react'
 
 interface Props {
   title?: string
@@ -11,15 +11,25 @@ interface Props {
   href?: string
   colorText?: string
   variant?: 'default' | 'gradient' | 'glass'
+  animationDirection?: 'fromTop' | 'fromBottom' | 'fromLeft' | 'fromRight'
 }
 
-const { title, body, colSpan, rowSpan, href, colorText, variant = 'default' } = Astro.props
+const { title, body, colSpan, rowSpan, href, colorText, variant = 'default', animationDirection = 'fromTop' } = Astro.props
 
 const variants = {
   default: 'bg-white dark:bg-gray-800',
   gradient: 'bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900',
   glass: 'backdrop-blur-md bg-white/30 dark:bg-gray-800/30'
 }
+
+const animationDirectionClassNameMap = {
+  fromTop: 'animate-from-top',
+  fromBottom: 'animate-from-bottom',
+  fromLeft: 'animate-from-left',
+  fromRight: 'animate-from-fromRight',
+}
+
+const SquareArrowOutUpRight = Icons.squareRight
 
 ---
 
@@ -36,6 +46,7 @@ const variants = {
     ${colSpan || 'md:col-span-2'}
     ${rowSpan || ''}
     ${href ? 'cursor-pointer' : ''}
+    ${animationDirectionClassNameMap[animationDirection] || ''}
     transform 
     transition-all 
     duration-300 
@@ -76,7 +87,6 @@ const variants = {
             group-hover:translate-x-1
             group-hover:-translate-y-1
           `}
-          size={20}
         />
         
         <ContentCard title={title} body={body}>

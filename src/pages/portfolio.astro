@@ -3,10 +3,10 @@ import BaseLayout from '../layouts/BaseLayout.astro'
 import TopLayout from '../layouts/TopLayout.astro'
 import BottomLayout from '../layouts/BottomLayout.astro'
 import ProjectCard from '../components/ProjectCard.astro'
-import {PROJECTS} from '../lib/constants'
+import {PORTFOLIO_PAGE, PROJECTS} from '../lib/constants'
 ---
 
-<BaseLayout title="Портфолио" description="Коллекция моих проектов и разработок">
+<BaseLayout title={PORTFOLIO_PAGE.TITLE} description={PORTFOLIO_PAGE.DESCRIPTION}>
   <main class="flex min-h-[80vh] flex-auto flex-col" transition:animate="slide">
     <TopLayout>
       <div class="max-w-3xl mx-auto text-center px-4">

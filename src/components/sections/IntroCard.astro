@@ -2,7 +2,10 @@
 import Card from '../Card.astro'
 import { Button } from '../ui/button'
 import { LINKS } from '../../lib/constants'
-import { Github, Mail } from 'lucide-react'
+import { Icons } from '../../lib/icons'
+
+const GithubIcon = Icons['github'];
+const EmailIcon = Icons['email'];
 
 ---
 
@@ -27,8 +30,8 @@ import { Github, Mail } from 'lucide-react'
           
           <p class="text-lg leading-relaxed">
             Создаю интерфейсы, в которые влюбляются пользователи, и решения, которыми гордятся клиенты. С 
-            <span class="font-semibold text-blue-600">React</span> мы на "ты", 
-            <span class="font-semibold text-yellow-600">JavaScript</span> знаю как свои пять пальцев, 
+            <span class="font-semibold text-yellow-600">React</span> мы на "ты", 
+            <span class="font-semibold text-blue-600">TypeScript</span> знаю как свои пять пальцев, 
             а чистый код — моё второе имя.
           </p>
         </div>
@@ -45,7 +48,7 @@ import { Github, Mail } from 'lucide-react'
           <Button 
             className="bg-gray-800 hover:bg-gray-900 text-white rounded-xl px-6 py-3 flex items-center gap-2"
           >
-            <Github className="w-5 h-5" />
+            <GithubIcon/>
             <span class="hidden md:inline">GitHub</span>
           </Button>
         </a>
@@ -59,7 +62,7 @@ import { Github, Mail } from 'lucide-react'
           <Button 
             className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-6 py-3 flex items-center gap-2"
           >
-            <Mail className="w-5 h-5" />
+            <EmailIcon/>
             <span class="hidden md:inline">Email</span>
           </Button>
         </a>
@@ -70,7 +73,7 @@ import { Github, Mail } from 'lucide-react'
     <img
       width="300"
       height="300"
-      src={`${import.meta.env.BASE_URL}/me.png`}
+      src="me.png"
       class="pointer-events-none absolute bottom-[-50px] right-[-130px] z-[1] max-h-[300px] w-auto select-none 
         opacity-90 transition-transform duration-300 hover:scale-105
         md:relative md:bottom-auto md:right-auto md:z-auto md:opacity-100 mt-10

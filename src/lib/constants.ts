@@ -1,4 +1,4 @@
-import type { Site, Page, ProjectData } from './types'
+import type { ExperienceData, Page, ProjectData, JobStatus } from './types'
 
 export const loaderAnimation = [
   '.loader',
@@ -16,33 +16,17 @@ export const LINKS = {
   discord: '',
 }
 
-// Global
-export const SITE: Site = {
-  TITLE: 'Astro Sphere',
-  DESCRIPTION:
-    'Welcome to Astro Sphere, a portfolio and blog for designers and developers.',
-  AUTHOR: 'Mark Horn',
+export const PORTFOLIO_PAGE: Page = {
+  TITLE: 'Портфолио',
+  DESCRIPTION: 'Коллекция моих проектов и разработок',
 }
 
-// Work Page
 export const WORK: Page = {
   TITLE: 'Опыт работы',
   DESCRIPTION: 'Места, где я работал и что делал.',
 }
 
-// Blog Page
-export const BLOG: Page = {
-  TITLE: 'Blog',
-  DESCRIPTION: 'Writing on topics I am passionate about.',
-}
-
-// Search Page
-export const SEARCH: Page = {
-  TITLE: 'Search',
-  DESCRIPTION: 'Search all posts and projects by keyword.',
-}
-
-export const EXPERIENCE = [
+export const EXPERIENCE: ExperienceData[] = [
   {
     company: 'VK',
     location: 'Россия',
@@ -137,10 +121,10 @@ export const PROJECTS: ProjectData[] = [
     id: 'smart-portal',
     name: 'Smart-portal',
     photos: [
-      `${import.meta.env.BASE_URL}/smart-portal/logo.png`,
-      `${import.meta.env.BASE_URL}/smart-portal/title-screen.png`,
-      `${import.meta.env.BASE_URL}/smart-portal/screen1.png`,
-      `${import.meta.env.BASE_URL}/smart-portal/screen2.png`,
+      '/smart-portal/logo.png',
+      '/smart-portal/title-screen.png',
+      '/smart-portal/screen1.png',
+      '/smart-portal/screen2.png',
     ],
     site: 'https://smart-portal.xyz/',
     githubUrl: 'https://github.com/EldarMuhamethanov/smart-portal',
@@ -162,3 +146,5 @@ export const PROJECTS: ProjectData[] = [
     ],
   },
 ]
+
+export const JOB_STATUS: JobStatus = 'not-looking'

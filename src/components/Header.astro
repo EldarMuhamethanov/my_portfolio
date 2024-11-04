@@ -1,6 +1,8 @@
 ---
 import { buttonVariants } from '../components/ui/button'
 import { ModeToggle } from '../components/ui/ThemeToggle'
+import { JOB_STATUS } from '../lib/constants'
+import JobStatusBadge from './JobStatusBadge.astro'
 ---
 
 <script is:inline>
@@ -24,12 +26,13 @@ import { ModeToggle } from '../components/ui/ThemeToggle'
     class="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0"
   >
     <div class="flex gap-6 md:gap-10">
-      <a href={import.meta.env.BASE_URL} class="flex items-center space-x-2">
+      <a href="/" class="flex items-center space-x-2">
         <span class="inline-block font-bold">EldarMuhamethanov</span>
       </a>
     </div>
     <div class="flex flex-1 items-center justify-end space-x-4">
       <nav class="flex items-center space-x-1 gap-2">
+        <JobStatusBadge status={JOB_STATUS} />
         <a
           href="https://github.com/EldarMuhamethanov"
           target="_blank"
