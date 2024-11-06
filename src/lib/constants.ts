@@ -145,6 +145,26 @@ export const PROJECTS: ProjectData[] = [
       'Docker',
     ],
   },
+  {
+    id: 'markup',
+    name: 'MarkUp',
+    photos: [
+      '/markup/logo.png',
+      '/markup/Screen1.png',
+      '/markup/Screen2.png',
+      '/markup/Screen3.png',
+      '/markup/Screen4.png',
+    ],
+    site: 'https://markup-wine.vercel.app',
+    githubUrl: 'https://github.com/EldarMuhamethanov/markup',
+    shortDescription:
+      'MarkUp - удобный и высокотехнологичный онлайн редактор markdown',
+    description: [
+      `С помощью данного приложения можно редактировать markdown и сразу видеть результат работы в виде html`,
+      `Есть возможность экспортировать получившийся код в такие форматы как HTML, PDF, в файл с расширением .md`,
+    ],
+    stack: ['React', 'MobX', 'Typescript', 'Next.js'],
+  },
 ]
 
 export const JOB_STATUS: JobStatus = 'not-looking'
