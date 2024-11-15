@@ -11,27 +11,26 @@ import { EXPERIENCE } from '../lib/constants'
 <BaseLayout title={WORK.TITLE} description={WORK.DESCRIPTION}>
   <main class="flex min-h-[80vh] flex-auto flex-col" transition:animate="fade">
     <TopLayout>
-      <h2
-        class="scroll-m-20 text-4xl font-bold tracking-tight first:mt-0"
-      >
+      <h2 class="scroll-m-20 text-4xl font-bold tracking-tight first:mt-0 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
         {WORK.TITLE}
       </h2>
     </TopLayout>
     <BottomLayout>
-      <ul class="space-y-12">
+      <ul class="space-y-8">
         {
           EXPERIENCE.map((entry) => (
-            <li class="animate group relative rounded-xl bg-card p-6 shadow-sm transition-all hover:shadow-md  dark:bg-gray-800">
-              <div class="absolute -left-3 top-0 h-full w-1 bg-primary/30 group-hover:bg-primary" />
+            <li class="group relative rounded-xl bg-gradient-to-br from-card/50 to-card p-6 shadow-lg transition-all duration-300 hover:shadow-xl hover:translate-y-[-2px] border border-border/5 backdrop-blur dark:from-gray-800/50 dark:to-gray-800">
+              <div class="absolute -left-3 top-0 h-full w-1.5 rounded-full bg-gradient-to-b from-primary to-primary/30 group-hover:from-primary group-hover:to-primary transition-colors duration-300" />
               
-              <div class="mb-4 inline-block rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
+              <div class="mb-4 inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary">
+                <span class="h-2 w-2 rounded-full bg-primary"></span>
                 {entry.start} - {entry.end}
               </div>
 
               <a
                 href={entry?.link}
                 target="_blank"
-                class={`group/link block font-bold text-foreground text-2xl transition-colors`}
+                class="group/link block font-bold text-foreground text-2xl transition-all hover:text-primary"
               >
                 {entry.company}
                 {entry?.link && (
@@ -41,35 +40,41 @@ import { EXPERIENCE } from '../lib/constants'
                 )}
               </a>
 
-              <div class="mb-4 text-lg font-semibold text-muted-foreground">
+              <div class="mb-4 text-lg font-semibold text-muted-foreground/80">
                 {entry.position}
               </div>
 
               <article class="prose dark:prose-invert">
                 {!!entry.tasks.length && (
-                  <h4 class="mb-3 text-sm font-bold uppercase text-primary/80">
+                  <h4 class="mb-3 text-sm font-bold uppercase text-primary">
                     Обязанности
                   </h4>
                 )}
-                <ul class="mb-6 list-inside list-disc space-y-2">
+                <ul class="mb-6 list-inside space-y-2">
                   {entry.tasks.map((task) => (
-                    <li class="text-sm text-muted-foreground">{task}</li>
+                    <li class="text-sm text-muted-foreground flex items-start gap-2">
+                      <span class="mt-1.5 h-1.5 w-1.5 rounded-full bg-primary/60 shrink-0"></span>
+                      {task}
+                    </li>
                   ))}
                 </ul>
 
                 {!!entry.achievements.length && (
-                  <h4 class="mb-3 text-sm font-bold uppercase text-primary/80">
+                  <h4 class="mb-3 text-sm font-bold uppercase text-primary">
                     Достижения
                   </h4>
                 )}
-                <ul class="mb-6 list-inside list-disc space-y-2">
+                <ul class="mb-6 list-inside space-y-2">
                   {entry.achievements.map((achievement) => (
-                    <li class="text-sm text-muted-foreground">{achievement}</li>
+                    <li class="text-sm text-muted-foreground flex items-start gap-2">
+                      <span class="mt-1.5 h-1.5 w-1.5 rounded-full bg-primary/60 shrink-0"></span>
+                      {achievement}
+                    </li>
                   ))}
                 </ul>
 
                 {!!entry.stack.length && (
-                  <h4 class="mb-3 text-sm font-bold uppercase text-primary/80">
+                  <h4 class="mb-3 text-sm font-bold uppercase text-primary">
                     Стек технологий
                   </h4>
                 )}
@@ -77,7 +82,7 @@ import { EXPERIENCE } from '../lib/constants'
                   {entry.stack.map((item) => (
                     <Badge 
                       variant="default" 
-                      className="transition-colors hover:bg-primary hover:text-primary-foreground"
+                      className="bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300"
                     >
                       {item}
                     </Badge>

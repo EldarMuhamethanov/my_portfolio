@@ -1,29 +1,47 @@
 ---
-import { Card as ShadcnCard } from '../ui/card'
+interface Props {
+  id: string;
+  name: string;
+  photo: string;
+  shortDescription: string;
+}
 
-
-const {
-  id,
-  name,
-  photo,
-  shortDescription,
-} = Astro.props
+const { id, name, photo, shortDescription } = Astro.props;
 ---
 
-<a href={`/project/${id}`} class="min-w-[300px] grow shrink-0 basis-[80px]">
-  <ShadcnCard
-    className={`transfor-y-[-40%] align-start perspective-1200 group relative flex-none transform justify-start overflow-hidden shadow-lg transition duration-75 ease-in-out cursor-pointer hover:border-primary`}
-  >
-    <img
-      src={photo}
-      class="h-48 w-full rounded-2xl rounded-bl-none rounded-br-none object-cover"
-      loading="eager"
-    />
-    <div class="flex flex-col gap-y-0.5 px-5 py-4">
-      <h1 class="text-lg font-medium">{name}</h1>
-      <h2 class="text-muted-foreground">{shortDescription}</h2>
+<a 
+  href={`/project/${id}`}
+  class="block h-full rounded-xl overflow-hidden bg-card hover:bg-card/80 transition-colors border border-border"
+>
+  <div class="flex flex-col h-full">
+    <div class="relative aspect-[16/9] overflow-hidden">
+      <img
+        src={photo}
+        alt={name}
+        class="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
+      />
     </div>
-
-    <slot />
-  </ShadcnCard>
-</Tag>
+    
+    <div class="flex flex-col flex-grow p-6">
+      <h3 class="text-xl font-semibold mb-2 line-clamp-1">{name}</h3>
+      <p class="text-muted-foreground line-clamp-3 flex-grow">
+        {shortDescription}
+      </p>
+      <div class="mt-4 inline-flex items-center text-sm font-medium text-primary">
+        Подробнее
+        <svg 
+          xmlns="http://www.w3.org/2000/svg" 
+          class="w-4 h-4 ml-1" 
+          viewBox="0 0 20 20" 
+          fill="currentColor"
+        >
+          <path 
+            fill-rule="evenodd" 
+            d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" 
+            clip-rule="evenodd"
+          />
+        </svg>
+      </div>
+    </div>
+  </div>
+</a>

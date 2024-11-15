@@ -17,9 +17,21 @@ const { title, description } = Astro.props
     <ViewTransitions />
   </head>
   <body class="min-h-screen bg-background font-sans antialiased">
+    <div class="fixed inset-0 -z-50">
+      <div class="absolute inset-0 bg-grid-pattern opacity-[0.02] dark:opacity-[0.03]"></div>
+    </div>
+
     <div class="flex flex-col items-center justify-center">
       <Header />
       <slot />
     </div>
   </body>
 </html>
+
+<style>
+  .bg-grid-pattern {
+    background-image: linear-gradient(currentColor 1px, transparent 1px),
+      linear-gradient(to right, currentColor 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+</style>

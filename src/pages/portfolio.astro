@@ -7,62 +7,101 @@ import {PORTFOLIO_PAGE, PROJECTS} from '../lib/constants'
 ---
 
 <BaseLayout title={PORTFOLIO_PAGE.TITLE} description={PORTFOLIO_PAGE.DESCRIPTION}>
-  <main class="flex min-h-[80vh] flex-auto flex-col" transition:animate="slide">
+  <main class="flex min-h-[80vh] flex-auto flex-col relative" transition:animate="slide">
     <TopLayout>
-      <div class="max-w-3xl mx-auto text-center px-4">
-        <h2 class="scroll-m-20 text-4xl font-bold tracking-tight first:mt-0 mb-6">
-          Мои Проекты
-        </h2>
-        <p class="text-lg text-muted-foreground mb-8">
-          Каждый проект — это уникальная история решения задач и создания ценности. 
-          Здесь собраны работы, демонстрирующие мой подход к разработке.
-        </p>
+      <div class="relative py-12">
+        <!-- Улучшенные декоративные элементы -->
+        <div class="absolute inset-0 -z-10 overflow-hidden">
+          <div class="absolute inset-0 bg-gradient-to-b from-primary/5 via-primary/3 to-transparent dark:from-primary/10 dark:via-primary/5"></div>
+          <div class="absolute -top-40 -right-40 w-96 h-96 bg-gradient-radial from-primary/10 to-transparent rounded-full blur-3xl animate-pulse-slow"></div>
+          <div class="absolute -top-40 -left-40 w-96 h-96 bg-gradient-radial from-primary/10 to-transparent rounded-full blur-3xl animate-pulse-slow delay-700"></div>
+        </div>
+
+        <div class="max-w-3xl mx-auto text-center px-4 relative">
+          <div class="inline-block mb-4">
+            <div class="relative">
+              <div class="absolute -inset-x-8 -inset-y-4 bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 blur-2xl rounded-full"></div>
+              <h2 class="relative scroll-m-20 text-5xl font-bold tracking-tight first:mt-0 mb-2 bg-clip-text text-transparent bg-gradient-to-r from-primary via-primary/90 to-primary/70">
+                Мои Проекты
+              </h2>
+            </div>
+          </div>
+          <p class="text-xl text-muted-foreground mb-8 leading-relaxed">
+            Каждый проект — это уникальная история решения задач и создания ценности. 
+            Здесь собраны работы, демонстрирующие мой подход к разработке.
+          </p>
+        </div>
       </div>
     </TopLayout>
 
-    <div class="container mx-auto px-4">
+    <div class="container mx-auto px-4 relative">
       <div class={`
         grid gap-8 mx-auto
         ${PROJECTS.length === 1 ? 'max-w-md' : 'max-w-7xl'}
         ${PROJECTS.length === 2 ? 'md:grid-cols-2 max-w-3xl' : ''}
         ${PROJECTS.length >= 3 ? 'md:grid-cols-2 lg:grid-cols-3' : ''}
       `}>
-        {PROJECTS.map(project => (
-          <div class="transform hover:scale-105 transition-transform duration-200">
-            <ProjectCard
-              id={project.id}
-              name={project.name}
-              photo={project.photos[0]}
-              shortDescription={project.shortDescription}
-            />
+        {PROJECTS.map((project, index) => (
+          <div 
+            class="group relative h-full"
+            style={`animation: fadeInUp 0.5s ease-out forwards ${index * 0.1}s`}
+          >
+            <div class="absolute -inset-0.5 bg-gradient-to-r from-primary/50 to-primary/30 rounded-2xl blur opacity-0 group-hover:opacity-100 transition duration-300"></div>
+            <div class="relative h-full transform transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1">
+              <div class="h-full flex flex-col">
+                <ProjectCard
+                  id={project.id}
+                  name={project.name}
+                  photo={project.photos[0]}
+                  shortDescription={project.shortDescription}
+                />
+              </div>
+            </div>
           </div>
         ))}
       </div>
 
       {PROJECTS.length === 0 && (
-        <div class="text-center py-12 bg-muted/50 rounded-lg">
-          <div class="max-w-md mx-auto px-4">
-            <h3 class="text-xl font-semibold mb-2">Проекты в разработке</h3>
-            <p class="text-muted-foreground">
-              Сейчас я работаю над новыми проектами. Совсем скоро здесь появятся интересные работы!
-            </p>
+        <div class="relative">
+          <div class="absolute inset-0 bg-gradient-to-r from-primary/5 to-primary/10 blur-2xl"></div>
+          <div class="relative text-center py-20 bg-gradient-to-b from-muted/30 to-muted/5 dark:from-muted/20 dark:to-muted/5 rounded-2xl backdrop-blur-sm border border-primary/10">
+            <div class="max-w-md mx-auto px-4">
+              <div class="mb-6 text-6xl animate-bounce-slow">🚀</div>
+              <h3 class="text-2xl font-semibold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">
+                Проекты в разработке
+              </h3>
+              <p class="text-lg text-muted-foreground">
+                Сейчас я работаю над новыми проектами. Совсем скоро здесь появятся интересные работы!
+              </p>
+            </div>
           </div>
         </div>
       )}
     </div>
 
     <BottomLayout size="xl">
-      <div class="w-full max-w-2xl mx-auto text-center px-4">
-        <h3 class="text-2xl font-semibold mb-4">Давайте создадим что-то вместе</h3>
-        <p class="text-muted-foreground mb-6">
+      <div class="relative w-full max-w-2xl mx-auto text-center px-4 py-12">
+        <!-- Улучш��нный декоративный элемент -->
+        <div class="absolute inset-0 -z-10">
+          <div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
+          <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-2/3 h-2/3 bg-gradient-radial from-primary/10 to-transparent rounded-full blur-2xl animate-pulse-slow"></div>
+        </div>
+
+        <h3 class="text-3xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary via-primary/90 to-primary/70">
+          Давайте создадим что-то вместе
+        </h3>
+        <p class="text-lg text-muted-foreground mb-8 leading-relaxed">
           Открыт для обсуждения новых проектов и интересных идей. 
           Свяжитесь со мной, чтобы обсудить возможности сотрудничества.
         </p>
         <a 
           href="mailto:eldarmy@mail.ru" 
-          class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary hover:bg-primary/90 transition-colors"
+          class="group relative inline-flex items-center justify-center"
         >
-          Связаться со мной
+          <span class="absolute -inset-0.5 bg-gradient-to-r from-primary to-primary/50 rounded-lg blur opacity-50 group-hover:opacity-100 transition duration-300"></span>
+          <span class="relative px-8 py-4 text-base font-medium rounded-lg text-white bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary/80 transition-all duration-300">
+            Связаться со мной
+          </span>
         </a>
       </div>
     </BottomLayout>
@@ -70,11 +109,7 @@ import {PORTFOLIO_PAGE, PROJECTS} from '../lib/constants'
 </BaseLayout>
 
 <style>
-  .container {
-    animation: fadeIn 0.5s ease-in;
-  }
-
-  @keyframes fadeIn {
+  @keyframes fadeInUp {
     from {
       opacity: 0;
       transform: translateY(20px);
@@ -83,6 +118,36 @@ import {PORTFOLIO_PAGE, PROJECTS} from '../lib/constants'
       opacity: 1;
       transform: translateY(0);
     }
+  }
+
+  @keyframes pulse-slow {
+    0%, 100% {
+      opacity: 0.5;
+    }
+    50% {
+      opacity: 0.8;
+    }
+  }
+
+  @keyframes bounce-slow {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  .animate-pulse-slow {
+    animation: pulse-slow 4s ease-in-out infinite;
+  }
+
+  .animate-bounce-slow {
+    animation: bounce-slow 2s ease-in-out infinite;
+  }
+
+  .delay-700 {
+    animation-delay: 700ms;
   }
 
   @media (max-width: 768px) {

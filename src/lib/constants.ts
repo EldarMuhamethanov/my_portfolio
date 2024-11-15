@@ -240,7 +240,7 @@ export const PROJECTS: ProjectData[] = [
         ]
       }
     ],
-    stack: ['React', 'MobX', 'Typescript', 'Next.js'],
+    stack: ['React', 'MobX', 'Typescript', 'Next.js', 'Immer js'],
   },
 ]
 
