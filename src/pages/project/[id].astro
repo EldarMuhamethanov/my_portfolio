@@ -129,13 +129,36 @@ if (!project) {
     {
       project.description.length && (
         <section class="prose max-w-none rounded-2xl p-8 shadow-sm">
-          <h2 class="mb-4 text-2xl font-semibold">Описание проекта</h2>
-          {project.description.map((item) => (
-            <>
-              <p>{item}</p>
-              <br />
-            </>
-          ))}
+          {project.description.map((block) => {
+            switch (block.type) {
+              case 'header':
+                return block.level === 1 ? (
+                  <h1 class="text-3xl font-semibold mb-4">
+                    {block.text}
+                  </h1>
+                ) : block.level === 2 ? (
+                  <h2 class="text-2xl font-semibold mb-4">
+                    {block.text}
+                  </h2>
+                ) : (
+                  <h3 class="text-xl font-semibold mb-4">
+                    {block.text}
+                  </h3>
+                )
+              case 'paragraph':
+                return <p class="mb-4">{block.text}</p>
+              case 'list':
+                return (
+                  <ul class="list-disc pl-6 mb-4">
+                    {block.items.map((item) => (
+                      <li class="mb-2">{item}</li>
+                    ))}
+                  </ul>
+                )
+              default:
+                return null
+            }
+          })}
         </section>
       )
     }

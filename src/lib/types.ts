@@ -7,6 +7,18 @@ export interface Site extends Page {
   AUTHOR: string
 }
 
+export type ProjectDescriptionBlock = {
+  type: 'paragraph',
+  text: string
+} | {
+  type: 'list',
+  items: string[],
+} | {
+    type: 'header'
+    level: 1 | 2 | 3,
+    text: string
+  }
+
 export interface ProjectData {
   id: string
   name: string
@@ -14,7 +26,7 @@ export interface ProjectData {
   githubUrl?: string
   site?: string
   shortDescription: string
-  description: string[]
+  description: ProjectDescriptionBlock[]
   stack: string[]
 }
 
