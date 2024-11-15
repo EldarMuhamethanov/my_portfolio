@@ -17,8 +17,8 @@ interface Props {
 const { title, body, colSpan, rowSpan, href, colorText, variant = 'default', animationDirection = 'fromTop' } = Astro.props
 
 const variants = {
-  default: 'bg-white dark:bg-gray-800',
-  gradient: 'bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900',
+  default: 'bg-white/80 dark:bg-gray-800/80',
+  gradient: 'bg-gradient-to-br from-primary/5 via-background to-background dark:from-primary/10 dark:via-background dark:to-background',
   glass: 'backdrop-blur-md bg-white/30 dark:bg-gray-800/30'
 }
 
@@ -34,8 +34,8 @@ const SquareArrowOutUpRight = Icons.squareRight
 ---
 
 <ShadcnCard
-  className={
-    `card-animate 
+  className={`
+    card-animate 
     group 
     relative 
     col-span-1 
@@ -49,19 +49,24 @@ const SquareArrowOutUpRight = Icons.squareRight
     ${animationDirectionClassNameMap[animationDirection] || ''}
     transform 
     transition-all 
-    duration-300 
+    duration-500
     ease-out
-    hover:shadow-xl
+    hover:shadow-2xl
+    hover:shadow-primary/5
     dark:shadow-gray-900/30
-    border border-gray-200 dark:border-gray-700
-    hover:border-primary/50
+    border border-gray-100 dark:border-gray-800
+    hover:border-primary/20
     hover:-translate-y-1
-    rounded-xl
-    p-6`
-  }
+    hover:scale-[1.02]
+    rounded-2xl
+    backdrop-blur-sm
+    p-6
+  `}
 >
-  {/* Декоративный фоновый элемент */}
-  <div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+  {/* Улучшенный декоративный фоновый элемент */}
+  <div class="absolute inset-0">
+    <div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+  </div>
 
   {
     href ? (
@@ -102,7 +107,16 @@ const SquareArrowOutUpRight = Icons.squareRight
     )
   }
 
-  {/* Декоративный border эффект */}
-  <div class="absolute inset-0 border border-primary/0 group-hover:border-primary/20 rounded-xl transition-colors duration-300"></div>
+  {/* Улучшенный декоративный border эффект */}
+  <div class="absolute inset-0 rounded-2xl border border-primary/0 group-hover:border-primary/20 transition-colors duration-500 group-hover:shadow-[inset_0_0_20px_rgba(0,0,0,0.02)]"></div>
 </ShadcnCard>
+
+<style>
+  .bg-grid-subtle {
+    background-image: 
+      linear-gradient(to right, currentColor 1px, transparent 1px),
+      linear-gradient(to bottom, currentColor 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+</style>
 
