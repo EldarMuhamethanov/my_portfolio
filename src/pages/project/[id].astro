@@ -23,10 +23,14 @@ if (!project) {
 >
   <article class="mx-auto max-w-6xl px-4 py-12">
     <header class="mb-16 text-center">
-      <h1 class="mb-6 bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-6xl font-bold text-transparent">
+      <h1
+        class="mb-6 bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-6xl font-bold text-transparent"
+      >
         {project.name}
       </h1>
-      <p class="mx-auto mb-8 max-w-2xl text-xl leading-relaxed text-muted-foreground">
+      <p
+        class="mx-auto mb-8 max-w-2xl text-xl leading-relaxed text-muted-foreground"
+      >
         {project.shortDescription}
       </p>
 
@@ -83,35 +87,8 @@ if (!project) {
       </div>
     </header>
 
-    <section class="mb-16">
-      <div
-        class="grid auto-rows-[300px] grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
-        id="gallery"
-      >
-        {
-          project.photos.map((photo, index) => (
-            <div class="group relative cursor-zoom-in overflow-hidden rounded-2xl bg-muted shadow-md transition-all duration-300 hover:shadow-xl">
-              <img
-                src={photo}
-                alt={`${project.name} screenshot ${index + 1}`}
-                class="h-full w-full transform object-cover object-center transition-transform duration-500 group-hover:scale-110"
-                loading={index === 0 ? 'eager' : 'lazy'}
-              />
-              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                <div class="absolute bottom-4 left-4 text-white">
-                  <p class="text-sm font-medium">Скриншот {index + 1}</p>
-                </div>
-              </div>
-            </div>
-          ))
-        }
-      </div>
-    </section>
-
     <section class="mb-16 rounded-2xl bg-muted/50 p-8 backdrop-blur-sm">
-      <h2 class="mb-8 text-center text-3xl font-bold">
-        Технологический стек
-      </h2>
+      <h2 class="mb-8 text-center text-3xl font-bold">Технологический стек</h2>
       <div class="flex flex-wrap justify-center gap-3">
         {
           project.stack.map((tech) => (
@@ -129,31 +106,29 @@ if (!project) {
     {
       project.description.length && (
         <section class="relative mb-16">
-          <div class="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent rounded-3xl" />
+          <div class="absolute inset-0 rounded-3xl bg-gradient-to-b from-primary/5 to-transparent" />
           <div class="relative rounded-3xl border border-primary/10 bg-card p-12 shadow-xl">
-            <h2 class="mb-8 text-center bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-4xl font-bold text-transparent">
+            <h2 class="mb-8 bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-center text-4xl font-bold text-transparent">
               Описание проекта
             </h2>
-            <div class="prose prose-lg max-w-none dark:prose-invert prose-headings:text-primary prose-p:text-foreground/90">
+            <div class="prose prose-lg dark:prose-invert prose-headings:text-primary prose-p:text-foreground/90 max-w-none">
               {project.description.map((block) => {
                 switch (block.type) {
                   case 'header':
                     return block.level === 1 ? (
-                      <h1 class="text-3xl font-bold mb-6">{block.text}</h1>
+                      <h1 class="mb-6 text-3xl font-bold">{block.text}</h1>
                     ) : block.level === 2 ? (
-                      <h2 class="text-2xl font-semibold mb-4">{block.text}</h2>
+                      <h2 class="mb-4 text-2xl font-semibold">{block.text}</h2>
                     ) : (
-                      <h3 class="text-xl font-semibold mb-3">{block.text}</h3>
+                      <h3 class="mb-3 text-xl font-semibold">{block.text}</h3>
                     )
                   case 'paragraph':
                     return (
-                      <p class="leading-relaxed mb-6 text-lg">
-                        {block.text}
-                      </p>
+                      <p class="mb-6 text-lg leading-relaxed">{block.text}</p>
                     )
                   case 'list':
                     return (
-                      <ul class="list-disc space-y-3 pl-6 mb-6">
+                      <ul class="mb-6 list-disc space-y-3 pl-6">
                         {block.items.map((item) => (
                           <li class="text-lg">{item}</li>
                         ))}
@@ -168,6 +143,35 @@ if (!project) {
         </section>
       )
     }
+
+    <section class="mb-16">
+      <h2 class="mb-8 bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-center text-4xl font-bold text-transparent">
+        Галерея проекта
+      </h2>
+      <div
+        class="grid auto-rows-[400px] grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3"
+        id="gallery"
+      >
+        {
+          project.photos.slice(1).map((photo, index) => (
+            <div class="group relative cursor-zoom-in overflow-hidden rounded-2xl bg-muted shadow-lg transition-all duration-300 hover:shadow-2xl">
+              <img
+                src={photo}
+                alt={`${project.name} screenshot ${index + 1}`}
+                class="h-full w-full transform object-cover object-center transition-transform duration-500 group-hover:scale-110"
+                loading={index === 0 ? 'eager' : 'lazy'}
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                <div class="absolute bottom-6 left-6 text-white">
+                  <p class="text-lg font-medium">Скриншот {index + 1}</p>
+                  <p class="text-sm text-gray-200">Нажмите для увеличения</p>
+                </div>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </section>
 
     <div
       id="imageModal"
@@ -242,7 +246,7 @@ if (!project) {
 
 <script define:vars={{ project }}>
   let currentIndex = 0
-  const photos = project.photos
+  const photos = project.photos.slice(1)
   const modal = document.getElementById('imageModal')
   const modalImage = document.getElementById('modalImage')
   const prevButton = document.getElementById('prevButton')
