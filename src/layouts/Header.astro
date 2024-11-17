@@ -22,15 +22,15 @@ import JobStatusBadge from '../components/common/JobStatusBadge.astro'
   class="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
 >
   <div
-    class="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0"
+    class="container flex h-16 items-center justify-between"
   >
-    <div class="flex gap-6 md:gap-10">
-      <a href="/" class="flex items-center space-x-2">
-        <span class="inline-block font-bold">EldarMuhamethanov</span>
+    <div class="flex gap-4 md:gap-10 min-w-0">
+      <a href="/" class="flex items-center min-w-0">
+        <span class="inline-block font-bold text-sm sm:text-base truncate">EldarMuhamethanov</span>
       </a>
     </div>
-    <div class="flex flex-1 shrink-0 items-center justify-end space-x-4">
-      <nav class="flex shrink-0 items-center gap-2 space-x-1">
+    <div class="flex items-center space-x-2 flex-shrink-0">
+      <nav class="flex items-center gap-2">
         <JobStatusBadge status={JOB_STATUS} />
         <ModeToggle transition:persist client:load />
       </nav>
