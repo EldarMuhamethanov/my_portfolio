@@ -47,8 +47,9 @@ const SquareArrowOutUpRight = Icons.squareRight
     ${rowSpan || ''}
     ${href ? 'cursor-pointer' : ''}
     ${animationDirectionClassNameMap[animationDirection] || ''}
-    transform 
-    transition-all 
+    transform
+    will-change-transform
+    transition-transform
     duration-500
     ease-out
     hover:shadow-2xl
