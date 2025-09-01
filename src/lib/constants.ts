@@ -34,7 +34,6 @@ export const EXPERIENCE: ExperienceData[] = [
     start: 'Июнь 2024',
     link: 'https://vk.com/',
     end: 'Текущий момент',
-    tasks: [],
     achievements: [],
     stack: [
       'Git',
@@ -48,6 +47,14 @@ export const EXPERIENCE: ExperienceData[] = [
       'HTML',
       'CSS',
     ],
+    tasks: [
+        'Разрабатываю и поддерживаю UI-компоненты VKUI (React, TypeScript): дизайн API, реализация и рефакторинг.',
+        'Обеспечиваю доступность и качество: a11y-правки, тесты (unit/integration/snapshot) и code review.',
+        'Оптимизирую производительность и размер сборки: lazy-loading, оптимизации рендера и bundle-size.',
+        'Веду документацию и демо (Storybook, примеры, migration-гайды) для разработчиков и дизайна.',
+        'Настраиваю CI/CD и релизный процесс: сборка пакетов, публикация и управление версиями.',
+        'Работаю с open-source-сообществом и кросс-функциональными командами: review PR, issues.',
+    ]
   },
   {
     company: 'Кибер-Ром',
