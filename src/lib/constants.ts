@@ -138,7 +138,7 @@ export const PROJECTS: ProjectData[] = [
       '/smart-portal/screen7.png',
       '/smart-portal/screen8.png',
     ],
-    site: 'https://smart-portal.xyz/',
+    site: 'https://smart-portal.vercel.app/',
     githubUrl: 'https://github.com/EldarMuhamethanov/smart-portal',
     shortDescription:
       'SmartPortal - ваш универсальный инструмент для взаимодействия со смарт-контрактами',
