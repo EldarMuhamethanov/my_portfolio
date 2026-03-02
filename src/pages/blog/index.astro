@@ -1,4 +1,5 @@
 ---
+import { getCollection } from 'astro:content'
 import BaseLayout from '../../layouts/BaseLayout.astro'
 import TopLayout from '../../layouts/TopLayout.astro'
 import BottomLayout from '../../layouts/BottomLayout.astro'
@@ -6,6 +7,10 @@ import PageTitle from '../../components/common/PageTitle.astro'
 
 const BLOG_TITLE = 'Блог'
 const BLOG_DESCRIPTION = 'Заметки о разработке, инструментах и опыте'
+
+const posts = (await getCollection('blog')).sort(
+  (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()
+)
 ---
 
 <BaseLayout title={`${BLOG_TITLE} — Eldar Muhamethanov`} description={BLOG_DESCRIPTION}>
@@ -15,17 +20,55 @@ const BLOG_DESCRIPTION = 'Заметки о разработке, инструм
     </TopLayout>
 
     <BottomLayout size="lg">
-      <div class="flex flex-col items-center justify-center py-16 px-4 text-center max-w-md mx-auto">
-        <div class="w-20 h-20 rounded-2xl bg-muted/50 flex items-center justify-center mb-6" aria-hidden="true">
-          <svg class="w-10 h-10 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-          </svg>
+      {posts.length > 0 ? (
+        <ul class="space-y-6 max-w-2xl mx-auto">
+          {posts.map((entry) => (
+            <li>
+              <a
+                href={`/blog/${entry.id.replace(/\.(mdx?|md)$/, '')}`}
+                class="group block rounded-2xl border border-border/80 bg-card/50 p-6 transition-all duration-300 hover:border-primary/20 hover:shadow-glow-sm"
+              >
+                <time
+                  datetime={entry.data.pubDate.toISOString()}
+                  class="text-sm font-medium text-muted-foreground"
+                >
+                  {entry.data.pubDate.toLocaleDateString('ru-RU', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric',
+                  })}
+                </time>
+                <h2 class="mt-2 text-xl font-semibold tracking-tight text-foreground group-hover:text-primary transition-colors">
+                  {entry.data.title}
+                </h2>
+                <p class="mt-2 text-muted-foreground leading-relaxed line-clamp-2">
+                  {entry.data.description}
+                </p>
+                <span class="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+                  Читать
+                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                    <polyline points="15 3 21 3 21 9"/>
+                    <line x1="10" y1="14" x2="21" y2="3"/>
+                  </svg>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div class="flex flex-col items-center justify-center py-16 px-4 text-center max-w-md mx-auto">
+          <div class="w-20 h-20 rounded-2xl bg-muted/50 flex items-center justify-center mb-6" aria-hidden="true">
+            <svg class="w-10 h-10 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            </svg>
+          </div>
+          <h2 class="text-xl font-semibold text-foreground mb-2">Здесь скоро появятся статьи</h2>
+          <p class="text-muted-foreground leading-relaxed">
+            Заметки о фронтенде, инструментах и опыте — пока раздел в разработке. Следите за обновлениями.
+          </p>
         </div>
-        <h2 class="text-xl font-semibold text-foreground mb-2">Здесь скоро появятся статьи</h2>
-        <p class="text-muted-foreground leading-relaxed">
-          Заметки о фронтенде, инструментах и опыте — пока раздел в разработке. Следите за обновлениями.
-        </p>
-      </div>
+      )}
     </BottomLayout>
   </main>
 </BaseLayout>

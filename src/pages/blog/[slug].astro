@@ -1,0 +1,59 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content'
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import TopLayout from '../../layouts/TopLayout.astro'
+import BottomLayout from '../../layouts/BottomLayout.astro'
+
+export async function getStaticPaths() {
+  const entries = await getCollection('blog')
+  return entries.map((entry) => ({
+    params: { slug: entry.id.replace(/\.(mdx?|md)$/, '') },
+    props: { entry },
+  }))
+}
+
+type Props = { entry: CollectionEntry<'blog'> }
+const { entry } = Astro.props as Props
+const { Content } = await entry.render()
+const { title, description, pubDate } = entry.data
+---
+
+<BaseLayout
+  title={`${title} — Блог | Eldar Muhamethanov`}
+  description={description}
+>
+  <main class="flex min-h-[80vh] flex-auto flex-col relative" transition:animate="slide">
+    <TopLayout>
+      <article class="relative">
+        <header class="mb-8">
+          <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
+            {title}
+          </h1>
+          <time
+            datetime={pubDate.toISOString()}
+            class="mt-2 block text-sm text-muted-foreground"
+          >
+            {pubDate.toLocaleDateString('ru-RU', {
+              day: 'numeric',
+              month: 'long',
+              year: 'numeric',
+            })}
+          </time>
+        </header>
+        <div class="prose prose-neutral dark:prose-invert max-w-none prose-headings:font-bold prose-pre:rounded-xl prose-code:rounded prose-code:px-1 prose-code:py-0.5 prose-code:bg-muted prose-code:before:content-none prose-code:after:content-none">
+          <Content />
+        </div>
+      </article>
+    </TopLayout>
+    <BottomLayout size="lg">
+      <div class="pt-8 border-t border-border">
+        <a
+          href="/blog"
+          class="text-sm font-medium text-primary hover:underline"
+        >
+          ← Все статьи
+        </a>
+      </div>
+    </BottomLayout>
+  </main>
+</BaseLayout>
