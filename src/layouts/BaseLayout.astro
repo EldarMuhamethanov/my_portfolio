@@ -17,21 +17,43 @@ const { title, description } = Astro.props
     <ViewTransitions />
   </head>
   <body class="min-h-screen bg-background font-sans antialiased">
-    <div class="fixed inset-0 -z-50">
-      <div class="absolute inset-0 bg-grid-pattern opacity-[0.02] dark:opacity-[0.03]"></div>
+    <div class="fixed inset-0 -z-50 pointer-events-none">
+      <div class="absolute inset-0 bg-grid-pattern opacity-[0.03] dark:opacity-[0.04]"></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/30" aria-hidden="true"></div>
     </div>
 
     <div class="flex flex-col items-center justify-center">
       <Header />
       <slot />
     </div>
+
+    <script is:inline>
+      document.addEventListener('click', async function (e) {
+        const btn = e.target.closest?.('[data-copy-email]')
+        if (!btn) return
+        const email = btn.getAttribute('data-copy-email')
+        const label = btn.querySelector('[data-copy-email-text]')
+        if (!email) return
+        try {
+          await navigator.clipboard.writeText(email)
+          var prevTitle = btn.getAttribute('title')
+          if (label) {
+            var was = label.textContent
+            label.textContent = 'Скопировано!'
+            setTimeout(function () { label.textContent = was }, 2000)
+          }
+          btn.setAttribute('title', 'Скопировано!')
+          setTimeout(function () { btn.setAttribute('title', prevTitle || 'Скопировать email') }, 2000)
+        } catch (_) {}
+      })
+    </script>
   </body>
 </html>
 
 <style>
   .bg-grid-pattern {
-    background-image: linear-gradient(currentColor 1px, transparent 1px),
-      linear-gradient(to right, currentColor 1px, transparent 1px);
-    background-size: 40px 40px;
+    background-image: linear-gradient(to right, currentColor 1px, transparent 1px),
+      linear-gradient(to bottom, currentColor 1px, transparent 1px);
+    background-size: 32px 32px;
   }
 </style>

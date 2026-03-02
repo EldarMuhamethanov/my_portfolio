@@ -8,19 +8,26 @@ import { buttonVariants } from '../components/ui/button'
   title="404 - Not Found"
   description="404 Error — this page was not found"
 >
-  <main class="flex h-[80vh] flex-auto">
-    <div class="flex flex-col items-center justify-center px-8">
-      <img src="/me_hello.png" alt="404" class="mb-8 size-64" />
-      <p class="text-sm text-muted-foreground">404</p>
-      <h1 class="text-4xl font-extrabold tracking-tight lg:text-5xl">
+  <main class="flex min-h-[80vh] flex-auto items-center justify-center">
+    <div class="flex flex-col items-center justify-center px-8 text-center">
+      <div class="relative mb-8">
+        <img src="/me_hello.png" alt="404" class="size-48 sm:size-64 drop-shadow-lg animate-fade-in-up" />
+        <span class="absolute -right-2 -top-2 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-2xl font-bold text-primary shadow-glow-sm">?</span>
+      </div>
+      <p class="text-sm font-medium tracking-widest text-primary/80 uppercase">404</p>
+      <h1 class="mt-2 text-4xl font-extrabold tracking-tight lg:text-5xl bg-clip-text text-transparent bg-gradient-to-r from-foreground via-foreground/90 to-foreground/80">
         Страница не найдена
       </h1>
-      <p class="mb-4 leading-7 [&:not(:first-child)]:mt-6">
+      <p class="mb-8 mt-4 max-w-md leading-7 text-muted-foreground">
         Извините, такой страницы не существует.
       </p>
-      <a href="/" rel="noreferrer" class={buttonVariants()}
-        >Вернуться на домашнюю страницу</a
+      <a
+        href="/"
+        rel="noreferrer"
+        class={buttonVariants({ variant: 'default' }) + " shadow-glow-sm hover:shadow-glow transition-shadow duration-200"}
       >
+        Вернуться на главную
+      </a>
     </div>
   </main>
 </BaseLayout>

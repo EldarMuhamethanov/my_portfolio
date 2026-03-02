@@ -1,0 +1,45 @@
+---
+import Card from '../common/Card.astro'
+import { LINKS } from '../../lib/constants'
+import { GitHubCalendarWidget } from '../ui/GitHubCalendarWidget'
+
+const GITHUB_USER =
+  LINKS.github.replace(/^https?:\/\/github\.com\/?/i, '').replace(/\/$/, '') ||
+  'EldarMuhamethanov'
+---
+
+<Card
+  colSpan="md:col-span-2 lg:col-span-4"
+  rowSpan="md:row-span-3"
+  title="Активность на GitHub"
+  variant="default"
+>
+  <div class="flex flex-col gap-4">
+    <div class="github-calendar-wrapper w-full overflow-x-auto">
+      <div class="min-w-[700px]">
+        <GitHubCalendarWidget username={GITHUB_USER} client:only="react" />
+      </div>
+    </div>
+    <a
+      href={LINKS.github}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
+    >
+      Открыть профиль GitHub
+      <svg
+        class="h-4 w-4"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        aria-hidden="true"
+      >
+        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+        ></path>
+        <polyline points="15 3 21 3 21 9"></polyline>
+        <line x1="10" y1="14" x2="21" y2="3"></line>
+      </svg>
+    </a>
+  </div>
+</Card>

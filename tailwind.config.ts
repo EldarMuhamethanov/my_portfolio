@@ -69,10 +69,29 @@ const config = {
           from: { height: 'var(--radix-accordion-content-height)' },
           to: { height: '0' },
         },
+        'glow-pulse': {
+          '0%, 100%': { opacity: '0.5' },
+          '50%': { opacity: '0.9' },
+        },
+        'fade-in-up': {
+          from: { opacity: '0', transform: 'translateY(12px)' },
+          to: { opacity: '1', transform: 'translateY(0)' },
+        },
+        'shimmer': {
+          '0%': { backgroundPosition: '-200% 0' },
+          '100%': { backgroundPosition: '200% 0' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        'glow-pulse': 'glow-pulse 3s ease-in-out infinite',
+        'fade-in-up': 'fade-in-up 0.5s ease-out forwards',
+        'shimmer': 'shimmer 2s ease-in-out infinite',
+      },
+      boxShadow: {
+        glow: '0 0 20px -5px hsl(var(--primary) / 0.25), 0 0 40px -10px hsl(var(--primary) / 0.15)',
+        'glow-sm': '0 0 15px -3px hsl(var(--primary) / 0.2)',
       },
     },
   },

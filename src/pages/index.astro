@@ -9,6 +9,7 @@ import Now from '../components/cards/Now.astro'
 import CVCard from '../components/cards/CVCard.astro'
 import ExperienceCard from '../components/cards/ExperienceCard.astro'
 import StudyCard from '../components/cards/StudyCard.astro'
+import GitHubActivityCard from '../components/cards/GitHubActivityCard.astro'
 
 ---
 
@@ -45,18 +46,21 @@ import StudyCard from '../components/cards/StudyCard.astro'
 >
   <div
     slot="loader"
-    class="loader bg-gradient-to-br from-background to-background/90 fixed bottom-0 left-0 right-0 top-0 z-50 flex h-screen w-screen items-center justify-center"
+    class="loader fixed inset-0 z-50 flex h-screen w-screen items-center justify-center bg-background/95 backdrop-blur-sm"
   >
-    <div class="flex flex-col items-center gap-4">
-      <div class="h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
-      <span class="text-xl font-medium text-primary">Загрузка...</span>
+    <div class="flex flex-col items-center gap-6">
+      <div class="relative">
+        <div class="h-14 w-14 animate-spin rounded-full border-2 border-muted border-t-primary" aria-hidden="true"></div>
+        <div class="absolute inset-0 h-14 w-14 rounded-full bg-primary/5 animate-glow-pulse" aria-hidden="true"></div>
+      </div>
+      <span class="text-lg font-medium text-muted-foreground animate-fade-in-up">Загрузка...</span>
     </div>
   </div>
 
-  <div class="fixed inset-0 -z-50 overflow-hidden">
-    <div class="absolute inset-0 bg-grid-pattern opacity-[0.02] dark:opacity-[0.03]"></div>
-    <div class="absolute -top-40 -right-40 h-96 w-96 rounded-full bg-primary/5 blur-3xl"></div>
-    <div class="absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-primary/5 blur-3xl"></div>
+  <div class="fixed inset-0 -z-50 overflow-hidden pointer-events-none">
+    <div class="absolute inset-0 bg-grid-pattern opacity-[0.03] dark:opacity-[0.04]"></div>
+    <div class="absolute -top-40 -right-40 h-80 w-80 rounded-full bg-primary/8 blur-3xl animate-glow-pulse"></div>
+    <div class="absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-primary/8 blur-3xl animate-glow-pulse" style="animation-delay: 1.5s"></div>
   </div>
 
   <main
@@ -76,6 +80,7 @@ import StudyCard from '../components/cards/StudyCard.astro'
     <ContactsCard />
     <ExperienceCard />
     <StudyCard />
+    <GitHubActivityCard />
   </main>
 </BaseLayout>
 

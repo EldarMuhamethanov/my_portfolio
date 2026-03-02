@@ -22,31 +22,31 @@ const EmailIcon = Icons['email'];
         <!-- Основной текст с улучшенной типографикой -->
         <div class="mt-4 space-y-4">
           <p class="m-0 text-2xl font-light leading-relaxed">
-            Привет! Я <span class="font-bold text-blue-700 relative">
+            Привет! Я <span class="font-bold text-primary relative inline-block">
               Эльдар
-              <span class="absolute bottom-0 left-0 w-full h-1 bg-blue-200 transform -skew-x-12"></span>
+              <span class="absolute bottom-0 left-0 w-full h-1 bg-primary/40 dark:bg-primary/50 transform -skew-x-12 rounded-full" aria-hidden="true"></span>
             </span> — фронтенд-разработчик, который превращает пиксели в эмоции, а код в удовольствие от использования.
           </p>
           
-          <p class="text-lg leading-relaxed">
+          <p class="text-lg leading-relaxed text-foreground/90">
             Создаю интерфейсы, в которые влюбляются пользователи, и решения, которыми гордятся клиенты. С 
-            <span class="font-semibold text-yellow-600">React</span> мы на "ты", 
-            <span class="font-semibold text-blue-600">TypeScript</span> знаю как свои пять пальцев, 
+            <span class="font-semibold text-primary">React</span> мы на "ты", 
+            <span class="font-semibold text-primary">TypeScript</span> знаю как свои пять пальцев, 
             а чистый код — моё второе имя.
           </p>
         </div>
       </div>
 
       <!-- Улучшенные кнопки социальных сетей -->
-      <div class="flex gap-4 mb-2 ml-2">
+      <div class="flex flex-wrap gap-3 mb-2 ml-2">
         <a 
           href={LINKS.github} 
           aria-label="github profile" 
           target="_blank"
-          class="transform transition-transform hover:scale-110"
+          class="inline-flex transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98]"
         >
           <Button 
-            className="bg-gray-800 hover:bg-gray-900 text-white rounded-xl px-6 py-3 flex items-center gap-2"
+            className="bg-foreground hover:bg-foreground/90 text-background rounded-xl px-6 py-3 flex items-center gap-2 shadow-md hover:shadow-glow-sm transition-shadow duration-200"
           >
             <GithubIcon/>
             <span class="hidden md:inline">GitHub</span>
@@ -57,10 +57,10 @@ const EmailIcon = Icons['email'];
           href={LINKS.mail} 
           aria-label="mail profile" 
           target="_blank"
-          class="transform transition-transform hover:scale-110"
+          class="inline-flex transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98]"
         >
           <Button 
-            className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-6 py-3 flex items-center gap-2"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl px-6 py-3 flex items-center gap-2 shadow-md hover:shadow-glow-sm transition-shadow duration-200"
           >
             <EmailIcon/>
             <span class="hidden md:inline">Email</span>
@@ -75,10 +75,10 @@ const EmailIcon = Icons['email'];
       height="300"
       src="me.png"
       class="pointer-events-none absolute bottom-[-50px] right-[-130px] z-[1] max-h-[300px] w-auto select-none 
-        opacity-90 transition-transform duration-300 hover:scale-105
+        opacity-90 transition-transform duration-300 hover:scale-[1.03]
         md:relative md:bottom-auto md:right-auto md:z-auto md:opacity-100 mt-10
-        animate-float"
-      alt="memoji of andres plaza"
+        animate-float drop-shadow-lg"
+      alt="memoji of Eldar"
     />
   </div>
 </Card>

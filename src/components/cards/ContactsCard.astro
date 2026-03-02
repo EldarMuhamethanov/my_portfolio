@@ -26,14 +26,44 @@ const VKIcon = Icons.vk
     <div class="space-y-2">
       <h2 class="text-sm font-bold">Контакты</h2>
       <div class="space-y-2 text-sm">
-        <p class="flex items-center gap-2">
-          <EmailIcon />
-          eldarmy@mail.ru
-        </p>
-        <p class="flex items-center gap-2">
-          <EmailIcon />
-          eldarmu.1@gmail.com
-        </p>
+        <div class="flex items-center justify-between gap-2 group/row">
+          <a href={LINKS.mail} class="flex items-center gap-2 min-w-0 hover:text-primary transition-colors">
+            <EmailIcon />
+            <span class="truncate">eldarmy@mail.ru</span>
+          </a>
+          <button
+            type="button"
+            data-copy-email="eldarmy@mail.ru"
+            class="shrink-0 flex items-center gap-1 rounded p-1.5 text-muted-foreground hover:bg-accent hover:text-accent-foreground opacity-0 group-hover/row:opacity-100 focus:opacity-100 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            title="Скопировать"
+            aria-label="Скопировать eldarmy@mail.ru"
+          >
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+            </svg>
+            <span data-copy-email-text class="hidden sm:inline">Копировать</span>
+          </button>
+        </div>
+        <div class="flex items-center justify-between gap-2 group/row">
+          <span class="flex items-center gap-2 min-w-0 text-foreground">
+            <EmailIcon />
+            <span class="truncate">eldarmu.1@gmail.com</span>
+          </span>
+          <button
+            type="button"
+            data-copy-email="eldarmu.1@gmail.com"
+            class="shrink-0 flex items-center gap-1 rounded p-1.5 text-muted-foreground hover:bg-accent hover:text-accent-foreground opacity-0 group-hover/row:opacity-100 focus:opacity-100 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            title="Скопировать"
+            aria-label="Скопировать eldarmu.1@gmail.com"
+          >
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+            </svg>
+            <span data-copy-email-text class="hidden sm:inline">Копировать</span>
+          </button>
+        </div>
         <p class="flex items-center gap-2">
           <LocationIcon/>
           🇷🇺 Москва, Россия
