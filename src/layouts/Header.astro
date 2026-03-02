@@ -22,18 +22,51 @@ import CopyEmailButton from '../components/common/CopyEmailButton.astro'
 <header
   class="sticky top-0 z-50 w-full border-b border-border/80 bg-background/90 backdrop-blur-md supports-[backdrop-filter]:bg-background/70 transition-shadow duration-300"
 >
-  <div
-    class="container flex h-16 items-center justify-between"
-  >
-    <div class="flex gap-4 md:gap-10 min-w-0">
+  <div class="container flex h-16 items-center justify-between">
+    <div class="flex items-center gap-4 md:gap-10 min-w-0">
+      <!-- На мобильных: только бургер слева. На sm+: логотип и навигация -->
+      <!-- Мобильные: бургер слева -->
+      <div class="relative sm:hidden flex items-center">
+        <button
+          type="button"
+          id="header-menu-toggle"
+          aria-expanded="false"
+          aria-controls="header-menu-dropdown"
+          aria-label="Открыть меню"
+          class="rounded-lg p-2 text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        >
+          <svg id="header-menu-icon-open" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+          <svg id="header-menu-icon-close" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+        <div
+          id="header-menu-dropdown"
+          class="header-nav-dropdown absolute left-0 top-full mt-1 py-2 w-48 rounded-xl border border-border bg-background shadow-lg opacity-0 invisible transition-all duration-200"
+          data-open="false"
+        >
+          <a href="/" class="block px-4 py-2.5 text-sm font-medium text-foreground hover:bg-accent hover:text-accent-foreground rounded-lg mx-1">Главная</a>
+          <a href="/portfolio" class="block px-4 py-2.5 text-sm font-medium text-foreground hover:bg-accent hover:text-accent-foreground rounded-lg mx-1">Портфолио</a>
+          <a href="/blog" class="block px-4 py-2.5 text-sm font-medium text-foreground hover:bg-accent hover:text-accent-foreground rounded-lg mx-1">Блог</a>
+          <a href="/work" class="block px-4 py-2.5 text-sm font-medium text-foreground hover:bg-accent hover:text-accent-foreground rounded-lg mx-1">Опыт</a>
+        </div>
+      </div>
+      <!-- Десктоп: логотип и навигация (скрыты на мобильных) -->
       <a
         href="/"
-        class="flex items-center min-w-0 group/logo rounded-md -mx-1 px-1 py-0.5 transition-colors duration-200 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        class="hidden sm:flex items-center min-w-0 group/logo rounded-md -mx-1 px-1 py-0.5 transition-colors duration-200 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
       >
         <span class="inline-block font-bold text-sm sm:text-base truncate tracking-tight group-hover/logo:tracking-wide transition-[letter-spacing] duration-200">EldarMuhamethanov</span>
       </a>
+      <nav class="hidden sm:flex items-center gap-6">
+        <a href="/portfolio" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Портфолио</a>
+        <a href="/blog" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Блог</a>
+        <a href="/work" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Опыт</a>
+      </nav>
     </div>
-    <div class="flex items-center space-x-2 flex-shrink-0">
+    <div class="flex items-center gap-2 flex-shrink-0">
       <nav class="flex items-center gap-1 sm:gap-2">
         <div class="hidden md:block">
           <CopyEmailButton />
@@ -44,3 +77,66 @@ import CopyEmailButton from '../components/common/CopyEmailButton.astro'
     </div>
   </div>
 </header>
+
+<script is:inline>
+  function initHeaderMenu() {
+    var toggle = document.getElementById('header-menu-toggle')
+    var dropdown = document.getElementById('header-menu-dropdown')
+    if (!toggle || !dropdown) return
+    var iconOpen = document.getElementById('header-menu-icon-open')
+    var iconClose = document.getElementById('header-menu-icon-close')
+
+    function open() {
+      dropdown.setAttribute('data-open', 'true')
+      toggle.setAttribute('aria-expanded', 'true')
+      if (iconOpen) iconOpen.classList.add('hidden')
+      if (iconClose) iconClose.classList.remove('hidden')
+    }
+    function close() {
+      dropdown.setAttribute('data-open', 'false')
+      toggle.setAttribute('aria-expanded', 'false')
+      if (iconOpen) iconOpen.classList.remove('hidden')
+      if (iconClose) iconClose.classList.add('hidden')
+    }
+
+    toggle.onclick = function () {
+      if (dropdown.getAttribute('data-open') === 'true') close()
+      else open()
+    }
+  }
+
+  document.addEventListener('click', function (e) {
+    var dropdown = document.getElementById('header-menu-dropdown')
+    var toggle = document.getElementById('header-menu-toggle')
+    if (!dropdown || !toggle || dropdown.getAttribute('data-open') !== 'true') return
+    if (toggle.contains(e.target) || dropdown.contains(e.target)) return
+    dropdown.setAttribute('data-open', 'false')
+    toggle.setAttribute('aria-expanded', 'false')
+    var iconOpen = document.getElementById('header-menu-icon-open')
+    var iconClose = document.getElementById('header-menu-icon-close')
+    if (iconOpen) iconOpen.classList.remove('hidden')
+    if (iconClose) iconClose.classList.add('hidden')
+  })
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initHeaderMenu)
+  } else {
+    initHeaderMenu()
+  }
+  document.addEventListener('astro:after-swap', initHeaderMenu)
+  document.addEventListener('astro:before-swap', function () {
+    var dropdown = document.getElementById('header-menu-dropdown')
+    if (dropdown && dropdown.getAttribute('data-open') === 'true') {
+      dropdown.setAttribute('data-open', 'false')
+      var toggle = document.getElementById('header-menu-toggle')
+      if (toggle) toggle.setAttribute('aria-expanded', 'false')
+    }
+  })
+</script>
+
+<style>
+  .header-nav-dropdown[data-open="true"] {
+    opacity: 1;
+    visibility: visible;
+  }
+</style>

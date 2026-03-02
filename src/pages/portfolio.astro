@@ -3,35 +3,18 @@ import BaseLayout from '../layouts/BaseLayout.astro'
 import TopLayout from '../layouts/TopLayout.astro'
 import BottomLayout from '../layouts/BottomLayout.astro'
 import ProjectCard from '../components/portfolio/ProjectCard.astro'
+import PageTitle from '../components/common/PageTitle.astro'
 import {PORTFOLIO_PAGE, PROJECTS} from '../lib/constants'
 ---
 
 <BaseLayout title={PORTFOLIO_PAGE.TITLE} description={PORTFOLIO_PAGE.DESCRIPTION}>
   <main class="flex min-h-[80vh] flex-auto flex-col relative" transition:animate="slide">
     <TopLayout>
-      <div class="relative py-12">
-        <!-- Улучшенные декоративные элементы -->
-        <div class="absolute inset-0 -z-10 overflow-hidden">
-          <div class="absolute inset-0 bg-gradient-to-b from-primary/5 via-primary/3 to-transparent dark:from-primary/10 dark:via-primary/5"></div>
-          <div class="absolute -top-40 -right-40 w-96 h-96 bg-gradient-radial from-primary/10 to-transparent rounded-full blur-3xl animate-pulse-slow"></div>
-          <div class="absolute -top-40 -left-40 w-96 h-96 bg-gradient-radial from-primary/10 to-transparent rounded-full blur-3xl animate-pulse-slow delay-700"></div>
-        </div>
-
-        <div class="max-w-3xl mx-auto text-center px-4 relative">
-          <div class="inline-block mb-4">
-            <div class="relative">
-              <div class="absolute -inset-x-8 -inset-y-4 bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 blur-2xl rounded-full"></div>
-              <h2 class="relative scroll-m-20 text-5xl font-bold tracking-tight first:mt-0 mb-2 bg-clip-text text-transparent bg-gradient-to-r from-primary via-primary/90 to-primary/70">
-                Мои Проекты
-              </h2>
-            </div>
-          </div>
-          <p class="text-xl text-muted-foreground mb-8 leading-relaxed">
-            Каждый проект — это уникальная история решения задач и создания ценности. 
-            Здесь собраны работы, демонстрирующие мой подход к разработке.
-          </p>
-        </div>
-      </div>
+      <PageTitle
+        as="h2"
+        title="Мои Проекты"
+        description="Каждый проект — это уникальная история решения задач и создания ценности. Здесь собраны работы, демонстрирующие мой подход к разработке."
+      />
     </TopLayout>
 
     <div class="container mx-auto px-4 relative">

@@ -52,7 +52,7 @@ export function GitHubCalendarWidget({ username }: Props) {
         />
       </div>
       <div
-        className="flex shrink-0 flex-col justify-center"
+        className="hidden sm:flex shrink-0 flex-col justify-center"
         style={{ flexBasis: 210, alignSelf: 'flex-start', paddingInline: 8 }}
       >
         <label

@@ -3,17 +3,15 @@ import { WORK } from '../lib/constants'
 import BaseLayout from '../layouts/BaseLayout.astro'
 import TopLayout from '../layouts/TopLayout.astro'
 import BottomLayout from '../layouts/BottomLayout.astro'
+import PageTitle from '../components/common/PageTitle.astro'
 import { Badge } from '../components/ui/badge'
-
 import { EXPERIENCE } from '../lib/constants'
 ---
 
 <BaseLayout title={WORK.TITLE} description={WORK.DESCRIPTION}>
   <main class="flex min-h-[80vh] flex-auto flex-col" transition:animate="fade">
     <TopLayout>
-      <h2 class="scroll-m-20 text-4xl font-bold tracking-tight first:mt-0 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-        {WORK.TITLE}
-      </h2>
+      <PageTitle as="h2" title={WORK.TITLE} />
     </TopLayout>
     <BottomLayout>
       <ul class="space-y-8">
