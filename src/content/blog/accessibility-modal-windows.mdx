@@ -1,0 +1,312 @@
+---
+title: 'Доступность модальных окон'
+description: 'Захват фокуса, клавиатурная навигация и ARIA-атрибуты для доступных модальных окон. Примеры и ссылки на библиотеки.'
+pubDate: 2025-12-02
+updatedDate: 2025-12-02
+---
+
+Модальное окно должно не только выглядеть поверх страницы, но и корректно вести себя с клавиатурой и скринридерами: не давать фокусу «уходить» за пределы модала, закрываться по Escape и открываться по Enter/Space. В этой статье — как это сделать: захват фокуса (в том числе своими силами), клавиатурная навигация и нужные ARIA-атрибуты, с примерами кода.
+
+## Зачем нужен захват фокуса
+
+Пока модал открыт, фокус должен оставаться **внутри** него. Если пользователь табулирует или скринридер читает следующий элемент, не должно происходить перехода на кнопки и ссылки **под** затемнённым фоном — иначе это путает и ломает логику «сначала закрой модал, потом работай со страницей».
+
+**Захват фокуса (focus trap)** — это ограничение навигации с клавиатуры (и, как следствие, для скринридера) только элементами внутри модального окна. При Tab фокус переходит к следующему фокусируемому элементу внутри модала, при Shift+Tab — к предыдущему; с последнего элемента Tab переносит фокус на первый (и наоборот).
+
+## Готовые библиотеки для захвата фокуса
+
+Использование готовой реализации обычно надёжнее: учитываются краевые случаи (порядок фокусируемых элементов, инертность фона, возврат фокуса при закрытии).
+
+- **[focus-trap](https://github.com/focus-trap/focus-trap)** (vanilla JS) — обвязка вокруг любого DOM-узла. Подходит для любого фреймворка.
+- **[focus-trap-react](https://github.com/focus-trap/focus-trap-react)** — React-обёртка над `focus-trap`. Один компонент оборачивает контент модала.
+- **[Radix UI Dialog](https://www.radix-ui.com/primitives/docs/components/dialog)** — готовый доступный диалог (фокус, Escape, ARIA). React.
+- **[React Aria](https://react-spectrum.adobe.com/react-aria/)** — примитивы от Adobe, в том числе `useDialog` и модальное поведение. React.
+- **[Floating UI](https://floating-ui.com/)** — позиционирование; для полного модала обычно комбинируют с `focus-trap` или аналогом.
+
+Ниже — минимальный пример с **focus-trap-react**: при открытии фокус попадает в контейнер и остаётся в нём до закрытия.
+
+```tsx
+import FocusTrap from 'focus-trap-react'
+
+function Modal({ isOpen, onClose, title, children }) {
+  if (!isOpen) return null
+
+  return (
+    <div className="modal-overlay" onClick={onClose} aria-hidden="true">
+      <FocusTrap
+        focusTrapOptions={{
+          initialFocus: () => document.getElementById('modal-title'),
+          escapeDeactivates: true,
+          onDeactivate: onClose,
+        }}
+      >
+        <div
+          className="modal-content"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="modal-title"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <h2 id="modal-title">{title}</h2>
+          {children}
+          <button type="button" onClick={onClose}>
+            Закрыть
+          </button>
+        </div>
+      </FocusTrap>
+    </div>
+  )
+}
+```
+
+`escapeDeactivates: true` даёт закрытие по Escape, `onDeactivate` вызывается при выходе из ловушки (в том числе по Escape). `initialFocus` задаёт первый фокусируемый элемент (часто заголовок или первая кнопка).
+
+## Самостоятельная реализация захвата фокуса
+
+Если подключать библиотеку не хочется, базовый захват можно сделать вручную: при открытии модала запомнить активный элемент, перенести фокус внутрь модала и по ключам Tab/Shift+Tab перемещать фокус только между элементами внутри контейнера, зацикливая с первого на последний и наоборот.
+
+```tsx
+import { useEffect, useRef } from 'react'
+
+function useFocusTrap(isActive) {
+  const containerRef = useRef(null)
+  const previousActiveRef = useRef(null)
+
+  useEffect(() => {
+    if (!isActive || !containerRef.current) return
+
+    previousActiveRef.current = document.activeElement
+
+    const container = containerRef.current
+    const focusableSelector =
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    const getFocusable = () =>
+      Array.from(container.querySelectorAll(focusableSelector))
+
+    const focusable = getFocusable()
+    const first = focusable[0]
+    if (first) first.focus()
+
+    function handleKeyDown(e) {
+      if (e.key !== 'Tab') return
+      const focusable = getFocusable()
+      if (focusable.length === 0) return
+
+      const first = focusable[0]
+      const last = focusable[focusable.length - 1]
+
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          e.preventDefault()
+          last.focus()
+        }
+      } else {
+        if (document.activeElement === last) {
+          e.preventDefault()
+          first.focus()
+        }
+      }
+    }
+
+    container.addEventListener('keydown', handleKeyDown)
+    return () => {
+      container.removeEventListener('keydown', handleKeyDown)
+      previousActiveRef.current?.focus()
+    }
+  }, [isActive])
+
+  return containerRef
+}
+
+// Использование:
+function Modal({ isOpen, onClose, title, children }) {
+  const trapRef = useFocusTrap(isOpen)
+
+  if (!isOpen) return null
+  return (
+    <div className="modal-overlay">
+      <div
+        ref={trapRef}
+        className="modal-content"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+      >
+        <h2 id="modal-title">{title}</h2>
+        {children}
+        <button type="button" onClick={onClose}>
+          Закрыть
+        </button>
+      </div>
+    </div>
+  )
+}
+```
+
+При размонтировании или закрытии модала фокус возвращается в `previousActiveRef.current` (элемент, который был активен до открытия).
+
+## Клавиатурная навигация
+
+### Открытие и закрытие
+
+- **Открытие:** кнопка, открывающая модал, должна активироваться по **Enter** и **Space** (нативный `<button>` это даёт автоматически). Не используйте для открытия только `div`/`span` без `role="button"` и `tabIndex={0}` — тогда нужно самому обрабатывать клавиши и `click`.
+- **Закрытие:** по **Escape** модал должен закрываться. Обработчик вешают на контейнер модала или на `document` при монтировании.
+
+```tsx
+useEffect(() => {
+  if (!isOpen) return
+  function handleEscape(e) {
+    if (e.key === 'Escape') onClose()
+  }
+  document.addEventListener('keydown', handleEscape)
+  return () => document.removeEventListener('keydown', handleEscape)
+}, [isOpen, onClose])
+```
+
+### Перемещение фокуса (Tab / Shift+Tab)
+
+Поведение уже описано выше: все фокусируемые элементы — только внутри модала, с зацикливанием. Это обеспечивает либо библиотека (focus-trap), либо свой обработчик `keydown` по Tab, как в примере с `useFocusTrap`.
+
+### Кнопка закрытия
+
+В модале должна быть явная кнопка «Закрыть» (или «Отмена», «Готово» — в зависимости от сценария). Она должна быть в порядке обхода Tab и активироваться Enter/Space. Лучше не оставлять закрытие только по клику по оверлею или по Escape — для доступности явная кнопка обязательна.
+
+## Необходимые ARIA-атрибуты
+
+Чтобы скринридер объявил модал именно как диалог и не читал содержимое страницы сзади, нужны следующие атрибуты.
+
+| Атрибут                          | Назначение                                                                                                                    |
+| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `role="dialog"`                  | Область объявляется как диалог.                                                                                               |
+| `aria-modal="true"`              | Режим «модальный»: остальная страница считается недоступной, пока диалог открыт.                                              |
+| `aria-labelledby="id-заголовка"` | Ссылка на элемент с заголовком (часто `<h2 id="...">`). Даёт диалогу имя.                                                     |
+| `aria-describedby="id-описания"` | Опционально: ссылка на текст, уточняющий назначение диалога.                                                                  |
+| `aria-hidden="true"` на оверлее  | Контент под оверлеем можно пометить как скрытый от дерева доступности (некоторые делают это для `body` или основного `main`). |
+
+Минимальная разметка:
+
+```tsx
+<div
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="modal-title"
+  aria-describedby="modal-desc"
+>
+  <h2 id="modal-title">Подтверждение</h2>
+  <p id="modal-desc">Вы уверены, что хотите удалить элемент?</p>
+  <button type="button" onClick={onClose}>
+    Закрыть
+  </button>
+</div>
+```
+
+Для **alertdialog** (например, «Удалить? Да / Нет») используйте `role="alertdialog"` и те же `aria-labelledby` / `aria-describedby`.
+
+## Пример: модал с фокусом и клавиатурой
+
+Ниже — сведённый пример модала с возвратом фокуса на триггер, захватом фокуса по Tab и закрытием по Escape и по кнопке.
+
+```tsx
+function AccessibleModal({ isOpen, onClose, title, children }) {
+  const containerRef = useRef(null)
+  const triggerRef = useRef(null)
+
+  // Возврат фокуса на кнопку, открывшую модал
+  useEffect(() => {
+    if (!isOpen) return
+    const previouslyFocused = document.activeElement
+    const firstFocusable = containerRef.current?.querySelector(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+    )
+    firstFocusable?.focus()
+
+    return () => {
+      if (previouslyFocused instanceof HTMLElement) {
+        previouslyFocused.focus()
+      }
+    }
+  }, [isOpen])
+
+  // Tab trap
+  useEffect(() => {
+    if (!isOpen || !containerRef.current) return
+    const container = containerRef.current
+    const selector =
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    const getNodes = () => Array.from(container.querySelectorAll(selector))
+
+    function onKeyDown(e) {
+      if (e.key === 'Escape') {
+        onClose()
+        return
+      }
+      if (e.key !== 'Tab') return
+      const nodes = getNodes()
+      if (nodes.length === 0) return
+      const first = nodes[0]
+      const last = nodes[nodes.length - 1]
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          e.preventDefault()
+          last.focus()
+        }
+      } else {
+        if (document.activeElement === last) {
+          e.preventDefault()
+          first.focus()
+        }
+      }
+    }
+    container.addEventListener('keydown', onKeyDown)
+    return () => container.removeEventListener('keydown', onKeyDown)
+  }, [isOpen, onClose])
+
+  if (!isOpen) return null
+
+  return (
+    <div className="modal-overlay" onClick={onClose} aria-hidden="true">
+      <div
+        ref={containerRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+        className="modal-content"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h2 id="modal-title">{title}</h2>
+        {children}
+        <button type="button" onClick={onClose} autoFocus>
+          Закрыть
+        </button>
+      </div>
+    </div>
+  )
+}
+
+// Триггер — обычная кнопка (Enter/Space из коробки)
+function App() {
+  const [open, setOpen] = useState(false)
+  return (
+    <>
+      <button type="button" onClick={() => setOpen(true)}>
+        Открыть модал
+      </button>
+      <AccessibleModal
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        title="Пример модала"
+      >
+        <p>Контент. Tab зациклен, Escape закрывает.</p>
+      </AccessibleModal>
+    </>
+  )
+}
+```
+
+## Итог
+
+- **Захват фокуса** держит фокус и навигацию Tab/Shift+Tab внутри модала; можно взять готовую библиотеку (focus-trap, Radix Dialog, React Aria) или реализовать цикл Tab вручную.
+- **Клавиатура:** открытие по Enter/Space с кнопки, закрытие по Escape и по явной кнопке «Закрыть»; фокус при закрытии возвращать на элемент, с которого открыли.
+- **ARIA:** у контейнера модала задать `role="dialog"`, `aria-modal="true"`, `aria-labelledby` (и при необходимости `aria-describedby`), чтобы скринридер корректно объявлял диалог и не вёл пользователя по контенту страницы под затемнением.
+
+Если не хочется поддерживать краевые случаи самим, разумный выбор — [Radix UI Dialog](https://www.radix-ui.com/primitives/docs/components/dialog) или [React Aria](https://react-spectrum.adobe.com/react-aria/); для ванильного JS — [focus-trap](https://github.com/focus-trap/focus-trap).
