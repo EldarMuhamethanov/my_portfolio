@@ -10,7 +10,6 @@ import CVCard from '../components/cards/CVCard.astro'
 import ExperienceCard from '../components/cards/ExperienceCard.astro'
 import StudyCard from '../components/cards/StudyCard.astro'
 import GitHubActivityCard from '../components/cards/GitHubActivityCard.astro'
-
 ---
 
 <script>
@@ -34,7 +33,7 @@ import GitHubActivityCard from '../components/cards/GitHubActivityCard.astro'
   ]
 
   await timeline(sequence as TimelineDefinition).finished
-  cards.forEach(card => {
+  cards.forEach((card) => {
     card.style.transform = ''
     card.style.opacity = ''
   })
@@ -50,32 +49,45 @@ import GitHubActivityCard from '../components/cards/GitHubActivityCard.astro'
   >
     <div class="flex flex-col items-center gap-6">
       <div class="relative">
-        <div class="h-14 w-14 animate-spin rounded-full border-2 border-muted border-t-primary" aria-hidden="true"></div>
-        <div class="absolute inset-0 h-14 w-14 rounded-full bg-primary/5 animate-glow-pulse" aria-hidden="true"></div>
+        <div
+          class="h-14 w-14 animate-spin rounded-full border-2 border-muted border-t-primary"
+          aria-hidden="true"
+        >
+        </div>
+        <div
+          class="absolute inset-0 h-14 w-14 animate-glow-pulse rounded-full bg-primary/5"
+          aria-hidden="true"
+        >
+        </div>
       </div>
-      <span class="text-lg font-medium text-muted-foreground animate-fade-in-up">Загрузка...</span>
+      <span class="animate-fade-in-up text-lg font-medium text-muted-foreground"
+        >Загрузка...</span
+      >
     </div>
   </div>
 
-  <div class="fixed inset-0 -z-50 overflow-hidden pointer-events-none">
-    <div class="absolute inset-0 bg-grid-pattern opacity-[0.03] dark:opacity-[0.04]"></div>
-    <div class="absolute -top-40 -right-40 h-80 w-80 rounded-full bg-primary/8 blur-3xl animate-glow-pulse"></div>
-    <div class="absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-primary/8 blur-3xl animate-glow-pulse" style="animation-delay: 1.5s"></div>
+  <div class="pointer-events-none fixed inset-0 -z-50 overflow-hidden">
+    <div
+      class="bg-grid-pattern absolute inset-0 opacity-[0.03] dark:opacity-[0.04]"
+    >
+    </div>
+    <div
+      class="bg-primary/8 absolute -right-40 -top-40 h-80 w-80 animate-glow-pulse rounded-full blur-3xl"
+    >
+    </div>
+    <div
+      class="bg-primary/8 absolute -bottom-40 -left-40 h-80 w-80 animate-glow-pulse rounded-full blur-3xl"
+      style="animation-delay: 1.5s"
+    >
+    </div>
   </div>
 
   <main
-    class="relative m-auto grid w-full max-w-7xl gap-3 overflow-hidden p-3 sm:gap-4 sm:p-4 md:grid-cols-2 md:gap-6 md:p-6 lg:grid-cols-4 lg:grid-rows-8 lg:gap-8"
+    class="relative m-auto grid w-full max-w-7xl gap-3 overflow-hidden p-3 sm:gap-4 sm:p-4 md:grid-cols-2 md:gap-6 md:p-6 lg:grid-cols-4 lg:grid-rows-4 lg:gap-8"
   >
     <IntroCard />
     <AboutMe />
     <CVCard />
-    <Now />
-    <Card
-      colSpan="md:col-span-1"
-      rowSpan="md:row-span-2"
-      title="Портфолио и проекты"
-      href="/portfolio"
-    />
     <Card
       colSpan="md:col-span-1"
       rowSpan="md:row-span-2"
@@ -83,6 +95,14 @@ import GitHubActivityCard from '../components/cards/GitHubActivityCard.astro'
       href="/blog"
       body="Заметки о разработке и не только"
     />
+    <Card
+      colSpan="md:col-span-1"
+      rowSpan="md:row-span-2"
+      title="Портфолио и проекты"
+      href="/portfolio"
+      body="Мои pet-проекты"
+    />
+    <Now />
     <TimeZoneCard />
     <ContactsCard />
     <ExperienceCard />
@@ -93,10 +113,15 @@ import GitHubActivityCard from '../components/cards/GitHubActivityCard.astro'
 
 <style>
   .bg-grid-pattern {
-    background-image: 
-      radial-gradient(circle at center, currentColor 1px, transparent 1px),
+    background-image: radial-gradient(
+        circle at center,
+        currentColor 1px,
+        transparent 1px
+      ),
       linear-gradient(to right, currentColor 1px, transparent 1px);
-    background-size: 40px 40px, 40px 40px;
+    background-size:
+      40px 40px,
+      40px 40px;
     mask-image: radial-gradient(ellipse at center, black 40%, transparent 70%);
   }
 </style>

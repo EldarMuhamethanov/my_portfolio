@@ -4,6 +4,9 @@
 
 @layer base {
   :root {
+    --scrollbar-track: 60 4.8% 95.9%;
+    --scrollbar-thumb: 20 5.9% 75%;
+    --scrollbar-thumb-hover: 20 5.9% 65%;
     --background: 0 0% 100%;
     --foreground: 20 14.3% 4.1%;
     --card: 0 0% 100%;
@@ -29,6 +32,9 @@
   }
 
   .dark {
+    --scrollbar-track: 12 6.5% 12%;
+    --scrollbar-thumb: 12 6.5% 28%;
+    --scrollbar-thumb-hover: 12 6.5% 36%;
     --background: 20 14.3% 4.1%;
     --foreground: 60 9.1% 97.8%;
     --card: 20 14.3% 4.1%;
@@ -91,5 +97,34 @@
     .animate-float {
       animation: none;
     }
+  }
+
+  /* Кастомные скроллбары (светлая/тёмная тема через переменные) */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--scrollbar-thumb)) hsl(var(--scrollbar-track));
+  }
+
+  *::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: hsl(var(--scrollbar-track));
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background: hsl(var(--scrollbar-thumb));
+    border-radius: 5px;
+    border: 2px solid hsl(var(--scrollbar-track));
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--scrollbar-thumb-hover));
+  }
+
+  *::-webkit-scrollbar-corner {
+    background: hsl(var(--scrollbar-track));
   }
 }
