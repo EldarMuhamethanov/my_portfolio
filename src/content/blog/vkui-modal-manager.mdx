@@ -1,0 +1,386 @@
+---
+title: 'useModalManager: менеджер модальных окон для VKUI'
+description: 'Как и зачем я сделал useModalManager — хук для императивного управления модальными окнами в VKUI: проблемы старого подхода, архитектура, возможности и идеи для развития.'
+pubDate: 2026-03-03
+updatedDate: 2026-03-03
+---
+
+В VKUI модальные окна (`ModalPage`, `ModalCard`) исторически управлялись через компонент `ModalRoot`: все модалки объявляются в дереве заранее, а переключение между ними — через состояние `activeModal`. Этот подход работает, но создаёт трение: разработчику приходится вручную следить за состоянием, описывать каждую модалку в разметке и самостоятельно обрабатывать сценарии с несколькими модальными окнами. В этой статье расскажу, как я решил эти проблемы, сделав хук `useModalManager` — императивный менеджер модальных окон для VKUI.
+
+Исходный код: [PR #8847 в VKCOM/VKUI](https://github.com/VKCOM/VKUI/pull/8847).
+
+## Как было раньше: ModalRoot
+
+Компонент `ModalRoot` — декларативный менеджер модальных окон. Он принимает коллекцию `ModalPage` и `ModalCard` как `children`, а переключение между ними происходит через проп `activeModal`.
+
+Типичный код выглядит так:
+
+```tsx
+function App() {
+  const [activeModal, setActiveModal] = useState<string | null>(null);
+
+  return (
+    <ModalRoot
+      activeModal={activeModal}
+      onClose={() => setActiveModal(null)}
+    >
+      <ModalPage
+        id="profile"
+        onClose={() => setActiveModal(null)}
+        header={<ModalPageHeader>Профиль</ModalPageHeader>}
+      >
+        <Group>
+          <SimpleCell onClick={() => setActiveModal('settings')}>
+            Настройки
+          </SimpleCell>
+        </Group>
+      </ModalPage>
+
+      <ModalCard
+        id="settings"
+        onClose={() => setActiveModal(null)}
+        title="Настройки"
+      >
+        <Button onClick={() => setActiveModal('confirm')}>
+          Сбросить
+        </Button>
+      </ModalCard>
+
+      <ModalCard
+        id="confirm"
+        onClose={() => setActiveModal(null)}
+        title="Вы уверены?"
+        actions={
+          <Button onClick={() => setActiveModal(null)}>Да</Button>
+        }
+      />
+    </ModalRoot>
+  );
+}
+```
+
+### Проблемы этого подхода
+
+**1. Все модалки объявляются заранее.** Даже если модалка нужна по клику на кнопку в глубине дерева, её разметку нужно вынести в `ModalRoot` на верхний уровень. Это разносит логику вызова и отображения по разным частям кода.
+
+**2. Ручное управление состоянием.** Разработчик сам поддерживает `activeModal`, обрабатывает `onClose` у каждой модалки и следит за переходами. При нескольких модальных окнах с навигацией между ними код обрастает условиями и вспомогательным состоянием.
+
+**3. Сложности с историей переходов.** Если пользователь открыл цепочку модалок (A → B → C) и нажал «Назад», приложение должно вернуться к B, а не закрыть всё. `ModalRoot` не управляет историей — это ответственность разработчика: нужно хранить стек `activeModal` и вручную переключать его.
+
+**4. Нет обратной связи о закрытии.** Часто нужно выполнить действие после того, как модалка закрылась (например, обновить данные). С `ModalRoot` для этого приходится подписываться на `onClosed` и связывать его с внешним состоянием. Нет удобного способа «дождаться» закрытия.
+
+## Новый подход: useModalManager
+
+`useModalManager` — это хук, который предоставляет императивный API для управления модальными окнами. Вместо того чтобы объявлять все модалки заранее, вы открываете их программно из любого места в коде.
+
+```tsx
+function App() {
+  const [api, contextHolder] = useModalManager();
+
+  const openProfile = () => {
+    api.openModalPage({
+      header: <ModalPageHeader>Профиль</ModalPageHeader>,
+      children: (
+        <Group>
+          <SimpleCell onClick={openSettings}>Настройки</SimpleCell>
+        </Group>
+      ),
+    });
+  };
+
+  const openSettings = () => {
+    const result = api.openModalCard({
+      title: "Настройки",
+      children: (
+        <Button onClick={openConfirm}>Сбросить</Button>
+      ),
+    });
+  };
+
+  const openConfirm = async () => {
+    const result = api.openModalCard({
+      title: "Вы уверены?",
+      actions: (
+        <Button onClick={() => result.close()}>Да</Button>
+      ),
+    });
+
+    await result.onClose();
+    console.log("Пользователь закрыл подтверждение");
+  };
+
+  return (
+    <>
+      <Button onClick={openProfile}>Открыть профиль</Button>
+      {contextHolder}
+    </>
+  );
+}
+```
+
+Разница видна сразу:
+
+- **Нет заранее объявленных модалок** — каждая открывается по месту вызова, рядом с бизнес-логикой.
+- **Нет ручного `activeModal`** — менеджер сам отслеживает, какая модалка активна.
+- **История работает из коробки** — при открытии новой модалки предыдущая сохраняется, кнопка «Назад» возвращает к ней.
+- **`onClose()` возвращает Promise** — можно `await`-ить закрытие модалки и реагировать на него.
+
+## Возможности менеджера
+
+### Открытие и закрытие
+
+Хук предоставляет четыре метода открытия:
+
+- `openModalCard(props)` — открыть `ModalCard` со стандартной разметкой.
+- `openModalPage(props)` — открыть `ModalPage` со стандартной разметкой.
+- `openCustomModalCard(payload)` — открыть кастомную модалку на базе `ModalCard`.
+- `openCustomModalPage(payload)` — открыть кастомную модалку на базе `ModalPage`.
+
+Каждый метод возвращает объект `OpenModalReturn` с методами управления конкретной модалкой:
+
+```tsx
+const result = api.openModalCard({ title: "Модалка" });
+
+result.id;       // уникальный идентификатор
+result.close();  // закрыть эту модалку
+result.update({ title: "Новый заголовок" }); // обновить свойства
+
+await result.onClose(); // дождаться закрытия
+```
+
+Для закрытия есть два метода на уровне API:
+
+- `api.close(id)` — закрыть конкретную модалку по ID.
+- `api.closeAll()` — закрыть все открытые модалки.
+
+### История переходов
+
+По умолчанию менеджер сохраняет историю открытия. Если открыть модалку A, затем B, затем C — при закрытии C пользователь вернётся к B, при закрытии B — к A.
+
+Это поведение можно отключить:
+
+```tsx
+const [api, contextHolder] = useModalManager({ saveHistory: false });
+```
+
+Или переключить динамически:
+
+```tsx
+api.setSaveHistory(false);
+```
+
+При отключённой истории предыдущая модалка закрывается при открытии новой — стандартное поведение для сценариев, где стек не нужен.
+
+### Обновление свойств на лету
+
+Иногда нужно изменить содержимое модалки без её закрытия — например, показать результат загрузки или обновить статус. Метод `update` позволяет это сделать:
+
+```tsx
+const result = api.openModalCard({ title: "Загрузка..." });
+
+const data = await fetchData();
+result.update({ title: "Готово", children: <DataView data={data} /> });
+```
+
+### Promise-based onClose
+
+Метод `onClose()` на объекте результата возвращает Promise, который разрешится после полного закрытия модалки (включая анимацию). Это удобно для построения последовательных сценариев:
+
+```tsx
+async function confirmDeletion(api: ModalManagerApi) {
+  const modal = api.openModalCard({
+    title: "Удалить элемент?",
+    actions: (
+      <Button onClick={() => modal.close()}>Подтвердить</Button>
+    ),
+  });
+
+  await modal.onClose();
+  // Модалка закрыта — выполняем удаление
+}
+```
+
+### Кастомные модальные окна
+
+Методы `openCustomModalCard` и `openCustomModalPage` позволяют передать свой React-компонент вместо стандартной разметки. Компонент получает `modalProps`, `close`, `update` и любые дополнительные свойства:
+
+```tsx
+type ConfirmModalProps = CustomModalProps<
+  OpenModalCardProps,
+  { message: string; onConfirm: () => void }
+>;
+
+function ConfirmModal({ modalProps, close, message, onConfirm }: ConfirmModalProps) {
+  return (
+    <ModalCard
+      {...modalProps}
+      title="Подтверждение"
+      actions={
+        <ButtonGroup>
+          <Button onClick={() => { onConfirm(); close(); }}>Да</Button>
+          <Button mode="outline" onClick={close}>Отмена</Button>
+        </ButtonGroup>
+      }
+    >
+      {message}
+    </ModalCard>
+  );
+}
+
+api.openCustomModalCard({
+  component: ConfirmModal,
+  additionalProps: {
+    message: "Удалить этот элемент?",
+    onConfirm: () => deleteItem(id),
+  },
+});
+```
+
+Это разделяет логику вызова модалки и её отображения. Компонент `ConfirmModal` можно переиспользовать в разных частях приложения, передавая разные `additionalProps`.
+
+## Архитектура
+
+Под капотом менеджер состоит из четырёх слоёв:
+
+### 1. Стор (createModalStore)
+
+Ядро менеджера — стор с подписками, совместимый с `useSyncExternalStore`. Состояние описывается типом `ModalManagerState`:
+
+```ts
+type ModalManagerState = {
+  modals: ModalManagerItem[];
+  activeModal: string | null;
+  overlayShowed: boolean;
+};
+```
+
+Стор хранит массив всех открытых модалок, идентификатор активной и флаг отображения оверлея. Обновления иммутабельны — каждая мутация создаёт новый объект состояния и уведомляет подписчиков.
+
+Интерфейс стора минимален: `getState()`, `subscribe(listener)` и набор методов для мутаций (`addModal`, `removeModal`, `closeModal`, `closeAll`, `updateModalProps`). Формат `getState` + `subscribe` — это именно то, что ожидает `useSyncExternalStore`, о котором я писал [ранее](/blog/use-sync-external-store).
+
+### 2. Хелперы состояния (modalStateHelpers)
+
+Чистые функции для трансформации состояния. Каждая принимает текущее состояние и возвращает новое:
+
+- `addModalToState` — добавляет модалку и делает её активной.
+- `removeModalFromState` — удаляет модалку из массива.
+- `setPrevActiveModal` — при закрытии текущей активирует предыдущую (реализация истории).
+- `closeAllModals` — закрывает все, оставляя только активную для проигрывания анимации закрытия.
+- `updateModalPropsInState` — обновляет свойства модалки по ID.
+
+Отдельно стоит `setPrevActiveModal`: эта функция находит активную модалку в массиве, добавляет её ID в множество `needCloseModals` (чтобы при завершении анимации закрытия модалка удалилась из стора) и переключает `activeModal` на предыдущий элемент массива. Если модалка единственная — `activeModal` становится `null`.
+
+### 3. Экшены (useModalActions)
+
+Хук, который создаёт мемоизированные функции для работы со стором. Ключевая логика — в функции `open`:
+
+```ts
+const open = React.useCallback((item: ModalManagerItem) => {
+  let resolvePromise: () => void;
+  const promise = new Promise<void>((resolve) => {
+    resolvePromise = resolve;
+  });
+
+  const callbacks = createModalCallbacks(id, modalProps, store, resolvePromise!);
+  const newModalData = createModalData(item, id, callbacks);
+
+  if (!saveHistoryRef.current) {
+    store.closePrevActiveIfNoHistory();
+  }
+
+  store.addModal(newModalData);
+
+  return {
+    id,
+    close: () => store.closeModal(id),
+    onClose: (resolve?) => promise.then(resolve),
+    update: item.update,
+  };
+}, [store]);
+```
+
+При каждом открытии создаётся `Promise`, который разрешится при полном закрытии модалки (когда отработает `onClosed`). Это и есть механизм `result.onClose()`. В колбэк `onClosed` встраивается вызов `resolvePromise`, который убирает модалку из стора и разрешает Promise.
+
+Если `saveHistory` отключена, перед добавлением новой модалки вызывается `closePrevActiveIfNoHistory` — предыдущая модалка начинает закрываться.
+
+Методы `openModalPage` и `openModalCard` внутри делегируют в `openCustomModalPage` и `openCustomModalCard`, подставляя стандартные компоненты-обёртки (`ModalPageWrapper`, `ModalCardWrapper`).
+
+### 4. ContextHolder
+
+React-компонент, который читает состояние стора через `useSyncExternalStore` и рендерит все модалки внутри `ModalRoot`:
+
+```tsx
+function ContextHolder({ store, ...restProps }: ContextHolderProps) {
+  const state = React.useSyncExternalStore(
+    store.subscribe, store.getState, store.getState
+  );
+
+  if (!shouldRender) return null;
+
+  return (
+    <ModalRoot activeModal={state.activeModal} {...restProps}>
+      {state.modals.map((modalData) => {
+        const Modal = modalData.component;
+        return (
+          <Modal
+            key={modalData.id}
+            modalProps={modalData.modalProps}
+            close={modalData.close}
+            update={modalData.update}
+            {...modalData.additionalProps}
+          />
+        );
+      })}
+    </ModalRoot>
+  );
+}
+```
+
+`ContextHolder` — мост между императивным API и декларативным рендерингом React. Он использует `ModalRoot` внутри, поэтому все анимации, оверлей и переходы между модалками работают так же, как и раньше. Но разработчик об этом не думает — он работает только с API хука.
+
+### Почему useSyncExternalStore
+
+Стор модалок живёт вне React — это обычный объект с массивом подписчиков. Чтобы React корректно перерисовывал `ContextHolder` при изменениях, нужна подписка, совместимая с Concurrent Mode. Именно для этого и существует `useSyncExternalStore`: он гарантирует, что во время одного коммита все компоненты видят одно и то же состояние стора.
+
+Альтернативой был бы `useState` + пробрасывание изменений через `setState`, но тогда экшены (которые вызываются из обработчиков кликов) должны были бы как-то «знать» о `setState` — это усложняет код и привязывает стор к конкретному компоненту. С `useSyncExternalStore` стор полностью независим от React, а подписка точечная: перерисовывается только `ContextHolder`.
+
+## Идеи для улучшения
+
+### Поддержка произвольных модальных окон
+
+Сейчас `openCustomModalCard` и `openCustomModalPage` позволяют создавать кастомные модалки, но они всё равно рендерятся внутри `ModalRoot` и привязаны к `ModalCard` или `ModalPage` как к базовым компонентам. Компонент-обёртка получает `modalProps`, которые типизированы под конкретный VKUI-компонент.
+
+Хотелось бы пойти дальше: дать возможность открывать **любые** модальные окна — не только из VKUI. Например, кастомный `<Drawer>`, сторонний `<Dialog>` или полностью своя реализация. Для этого менеджеру нужен ещё один метод вроде `openModal(component, props)`, который:
+
+- Не оборачивает компонент в `ModalCard` / `ModalPage`.
+- Не требует от компонента знания о `modalProps`.
+- При этом сохраняет все возможности менеджера: историю, `onClose()` с Promise, `update`, `close`.
+
+Технически это означает, что `ContextHolder` должен уметь рендерить модалки не только через `ModalRoot`, но и напрямую — через портал или другой контейнер. Это существенное изменение архитектуры, но оно сделает менеджер универсальным инструментом, а не обёрткой над конкретными компонентами.
+
+### Confirm / Prompt паттерн
+
+`onClose()` возвращает Promise, но не передаёт результат: нельзя узнать, нажал пользователь «Да» или «Отмена». Было бы удобно иметь типизированный вариант:
+
+```tsx
+const confirmed = await api.confirm({
+  title: "Удалить?",
+  message: "Это действие нельзя отменить",
+});
+
+if (confirmed) {
+  deleteItem(id);
+}
+```
+
+Сейчас это реализуется вручную через `openCustomModalCard` и внешний промис, но встроенный паттерн был бы удобнее.
+
+## Итог
+
+- **`useModalManager`** заменяет декларативный `ModalRoot` императивным API: модалки открываются программно, без предварительного объявления в дереве.
+- **История переходов** работает из коробки — менеджер хранит стек модалок и возвращается к предыдущей при закрытии текущей.
+- **Promise-based `onClose()`** позволяет строить последовательные сценарии: открыть модалку, дождаться закрытия, выполнить действие.
+- **Архитектура** построена на внешнем сторе с подписками (`useSyncExternalStore`), чистых функциях для трансформации состояния и `ContextHolder`, который связывает императивный API с декларативным рендерингом React.
+- **Направление развития** — поддержка произвольных модальных окон, не привязанных к компонентам VKUI, и встроенные паттерны вроде `confirm` / `prompt`.
+
+Документация: [useModalManager](https://vkui.io/components/use-modal-manager/).
