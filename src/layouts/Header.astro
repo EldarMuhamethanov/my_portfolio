@@ -2,7 +2,6 @@
 import { ModeToggle } from '../components/ui/ThemeToggle'
 import { JOB_STATUS } from '../lib/constants'
 import JobStatusBadge from '../components/common/JobStatusBadge.astro'
-import CopyEmailButton from '../components/common/CopyEmailButton.astro'
 ---
 
 <script is:inline>
@@ -68,9 +67,6 @@ import CopyEmailButton from '../components/common/CopyEmailButton.astro'
     </div>
     <div class="flex items-center gap-2 flex-shrink-0">
       <nav class="flex items-center gap-1 sm:gap-2">
-        <div class="hidden md:block">
-          <CopyEmailButton />
-        </div>
         <JobStatusBadge status={JOB_STATUS} />
         <ModeToggle transition:persist client:load />
       </nav>

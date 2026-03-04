@@ -29,21 +29,20 @@ const { title, description } = Astro.props
 
     <script is:inline>
       document.addEventListener('click', async function (e) {
-        const btn = e.target.closest?.('[data-copy-email]')
+        const btn = e.target.closest?.('[data-copy-email]');
         if (!btn) return
-        const email = btn.getAttribute('data-copy-email')
-        const label = btn.querySelector('[data-copy-email-text]')
+        const email = btn.getAttribute('data-copy-email');
         if (!email) return
         try {
           await navigator.clipboard.writeText(email)
-          var prevTitle = btn.getAttribute('title')
-          if (label) {
-            var was = label.textContent
-            label.textContent = 'Скопировано!'
-            setTimeout(function () { label.textContent = was }, 2000)
-          }
-          btn.setAttribute('title', 'Скопировано!')
-          setTimeout(function () { btn.setAttribute('title', prevTitle || 'Скопировать email') }, 2000)
+          const prevHTML = btn.innerHTML;
+          btn.innerHTML = '✔️';
+          btn.setAttribute('title', 'Скопировано!');
+          debugger
+          setTimeout(() => { 
+            btn.setAttribute('title', 'Скопировать email');
+            btn.innerHTML = prevHTML;
+          }, 2000)
         } catch (_) {}
       })
     </script>
