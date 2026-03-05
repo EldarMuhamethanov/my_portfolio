@@ -1,0 +1,138 @@
+---
+type Heading = { slug: string; depth: number; text: string }
+type Props = { headings?: Heading[] }
+const { headings = [] } = Astro.props
+const filteredHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3)
+const hasToc = filteredHeadings.length > 0
+---
+
+<div class="relative flex w-full flex-col gap-8 lg:flex-row">
+  {hasToc && (
+    <>
+      <!-- Десктоп: сайдбар с оглавлением -->
+      <aside
+        class="order-1 w-full lg:sticky lg:top-24 lg:w-56 lg:shrink-0"
+        aria-hidden={!hasToc}
+      >
+        <div class="hidden lg:block lg:rounded-lg lg:border lg:border-border lg:bg-muted/30 lg:px-4 lg:py-3 lg:sticky lg:top-0">
+          <p class="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            Оглавление
+          </p>
+          <nav aria-label="Оглавление статьи">
+            <ul class="space-y-1 text-sm">
+              {filteredHeadings.map((heading) => (
+                <li class={heading.depth === 3 ? 'pl-4' : ''}>
+                  <a
+                    href={`#${heading.slug}`}
+                    class="block rounded px-1 py-0.5 text-muted-foreground hover:text-primary hover:underline"
+                  >
+                    {heading.text}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
+      </aside>
+
+      <!-- Мобилки: плавающая кнопка -->
+      <div class="fixed bottom-6 right-6 z-40 lg:hidden" aria-hidden="true">
+        <button
+          type="button"
+          id="blog-toc-toggle"
+          aria-label="Открыть оглавление"
+          class="flex h-12 w-12 items-center justify-center rounded-full border border-border bg-background shadow-lg shadow-black/10 transition hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          <svg class="h-5 w-5 text-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Мобилки: оверлей с оглавлением -->
+      <div
+        id="blog-toc-overlay"
+        class="fixed inset-0 z-50 flex items-start justify-center bg-black/50 p-4 pt-20 opacity-0 pointer-events-none transition-opacity duration-200 lg:hidden"
+        aria-hidden="true"
+        aria-label="Оглавление статьи"
+      >
+        <div
+          id="blog-toc-panel"
+          class="w-full max-w-sm max-h-[70vh] overflow-y-auto rounded-xl border border-border bg-background p-4 shadow-xl"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="blog-toc-title"
+        >
+          <div class="mb-3 flex items-center justify-between">
+            <h2 id="blog-toc-title" class="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+              Оглавление
+            </h2>
+            <button
+              type="button"
+              id="blog-toc-close"
+              aria-label="Закрыть оглавление"
+              class="rounded p-2 text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <nav aria-label="Оглавление статьи">
+            <ul class="space-y-1 text-sm">
+              {filteredHeadings.map((heading) => (
+                <li class={heading.depth === 3 ? 'pl-4' : ''}>
+                  <a
+                    href={`#${heading.slug}`}
+                    class="blog-toc-link block rounded px-1 py-2 text-foreground hover:bg-muted hover:text-primary"
+                  >
+                    {heading.text}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </>
+  )}
+  <article class="order-2 min-w-0 flex-1">
+    <slot />
+  </article>
+</div>
+
+{hasToc && (
+  <script>
+    (function () {
+      const overlay = document.getElementById('blog-toc-overlay')
+      const toggle = document.getElementById('blog-toc-toggle')
+      const closeBtn = document.getElementById('blog-toc-close')
+      const links = document.querySelectorAll('.blog-toc-link')
+
+      function openToc() {
+        if (!overlay) return
+        overlay.classList.remove('opacity-0', 'pointer-events-none')
+        overlay.setAttribute('aria-hidden', 'false')
+      }
+
+      function closeToc() {
+        if (!overlay) return
+        overlay.classList.add('opacity-0', 'pointer-events-none')
+        overlay.setAttribute('aria-hidden', 'true')
+      }
+
+      toggle?.addEventListener('click', openToc)
+      closeBtn?.addEventListener('click', closeToc)
+
+      overlay?.addEventListener('click', (e) => {
+        if (e.target === overlay) closeToc()
+      })
+
+      links.forEach((link) => {
+        link.addEventListener('click', () => {
+          closeToc()
+        })
+      })
+    })()
+  </script>
+)}
