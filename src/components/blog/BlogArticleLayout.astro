@@ -104,35 +104,43 @@ const hasToc = filteredHeadings.length > 0
 {hasToc && (
   <script>
     (function () {
-      const overlay = document.getElementById('blog-toc-overlay')
-      const toggle = document.getElementById('blog-toc-toggle')
-      const closeBtn = document.getElementById('blog-toc-close')
-      const links = document.querySelectorAll('.blog-toc-link')
-
       function openToc() {
+        const overlay = document.getElementById('blog-toc-overlay')
         if (!overlay) return
         overlay.classList.remove('opacity-0', 'pointer-events-none')
         overlay.setAttribute('aria-hidden', 'false')
       }
 
       function closeToc() {
+        const overlay = document.getElementById('blog-toc-overlay')
         if (!overlay) return
         overlay.classList.add('opacity-0', 'pointer-events-none')
         overlay.setAttribute('aria-hidden', 'true')
       }
 
-      toggle?.addEventListener('click', openToc)
-      closeBtn?.addEventListener('click', closeToc)
-
-      overlay?.addEventListener('click', (e) => {
-        if (e.target === overlay) closeToc()
-      })
-
-      links.forEach((link) => {
-        link.addEventListener('click', () => {
+      function handleTocClick(e) {
+        if (e.target.closest?.('#blog-toc-toggle')) {
+          openToc()
+          return
+        }
+        if (e.target.closest?.('#blog-toc-close')) {
           closeToc()
-        })
-      })
+          return
+        }
+        if (e.target.closest?.('.blog-toc-link')) {
+          closeToc()
+          return
+        }
+        const overlay = document.getElementById('blog-toc-overlay')
+        if (overlay && e.target === overlay) {
+          closeToc()
+        }
+      }
+
+      if (!document.body.dataset.blogTocListener) {
+        document.body.dataset.blogTocListener = '1'
+        document.addEventListener('click', handleTocClick)
+      }
     })()
   </script>
 )}

@@ -16,43 +16,56 @@ const { title, description } = Astro.props
     <HeadSEO title={title} description={description} />
     <ViewTransitions />
   </head>
-  <body class="h-screen bg-background font-sans antialiased overflow-hidden flex flex-col">
-    <div class="fixed inset-0 -z-50 pointer-events-none">
-      <div class="absolute inset-0 bg-grid-pattern opacity-[0.03] dark:opacity-[0.04]"></div>
-      <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/30" aria-hidden="true"></div>
+  <body
+    class="flex flex-col overflow-hidden bg-background font-sans antialiased"
+    style="height: 100dvh"
+  >
+    <div class="pointer-events-none fixed inset-0 -z-50">
+      <div
+        class="bg-grid-pattern absolute inset-0 opacity-[0.03] dark:opacity-[0.04]"
+      >
+      </div>
+      <div
+        class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/30"
+        aria-hidden="true"
+      >
+      </div>
     </div>
 
     <Header />
-    <div class="min-h-0 flex-1 overflow-y-auto w-full">
+    <div class="min-h-0 w-full flex-1 overflow-y-auto">
       <slot />
     </div>
 
     <script is:inline>
       document.addEventListener('click', async function (e) {
-        const btn = e.target.closest?.('[data-copy-email]');
+        const btn = e.target.closest?.('[data-copy-email]')
         if (!btn) return
-        const email = btn.getAttribute('data-copy-email');
+        const email = btn.getAttribute('data-copy-email')
         if (!email) return
         try {
           await navigator.clipboard.writeText(email)
-          const prevHTML = btn.innerHTML;
-          btn.innerHTML = '✔️';
-          btn.setAttribute('title', 'Скопировано!');
+          const prevHTML = btn.innerHTML
+          btn.innerHTML = '✔️'
+          btn.setAttribute('title', 'Скопировано!')
           debugger
-          setTimeout(() => { 
-            btn.setAttribute('title', 'Скопировать email');
-            btn.innerHTML = prevHTML;
+          setTimeout(() => {
+            btn.setAttribute('title', 'Скопировать email')
+            btn.innerHTML = prevHTML
           }, 2000)
         } catch (_) {}
       })
     </script>
+    <style>
+      .bg-grid-pattern {
+        background-image: linear-gradient(
+            to right,
+            currentColor 1px,
+            transparent 1px
+          ),
+          linear-gradient(to bottom, currentColor 1px, transparent 1px);
+        background-size: 32px 32px;
+      }
+    </style>
   </body>
 </html>
-
-<style>
-  .bg-grid-pattern {
-    background-image: linear-gradient(to right, currentColor 1px, transparent 1px),
-      linear-gradient(to bottom, currentColor 1px, transparent 1px);
-    background-size: 32px 32px;
-  }
-</style>
