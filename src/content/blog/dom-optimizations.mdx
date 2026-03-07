@@ -1,0 +1,391 @@
+---
+title: 'Браузер не резиновый: как писать код который не заставляет его страдать'
+description: 'Браузер делает reflow сотни раз в день — и большинство из них ты спровоцировал сам. Разбираем механику: forced synchronous layout, layout thrashing, compositor thread и CSS-свойства которые браузер обрабатывает бесплатно. Без базовых советов — только то, что реально меняет подход.'
+pubDate: 2026-07-03
+updatedDate: 2026-07-03
+---
+
+Большинство статей про производительность дают список правил: не делай так, делай эдак. Проблема в том, что правила без понимания механики быстро забываются — или применяются не там, где нужно.
+
+Поэтому начнём с того, как браузер вообще превращает твой код в пиксели на экране.
+
+---
+
+## Как браузер рендерит страницу
+
+Путь от HTML до пикселей выглядит примерно так:
+
+```
+JavaScript → Style → Layout → Paint → Composite
+```
+
+- **Style** — браузер вычисляет какие CSS-правила применяются к каждому элементу
+- **Layout** — вычисляет размеры и позиции всех элементов (это и есть **reflow**)
+- **Paint** — заполняет пиксели: цвета, тени, текст
+- **Composite** — склеивает слои и отправляет на экран
+
+Чем раньше в этом пайплайне ты останавливаешься — тем дешевле операция. Изменение `opacity` пропускает Layout и Paint, попадая сразу в Composite. Изменение `width` запускает весь пайплайн с самого начала.
+
+![Визуализация пайплайна рендеринга браузера: JS → Style → Layout → Paint → Composite](/blog/dom-optimizations-render-pipeline.png)
+
+---
+
+## Forced Synchronous Layout: когда браузер вынужден всё бросить
+
+Обычно браузер умный: он не делает reflow сразу при каждом изменении DOM, а откладывает их и батчит — выполняет все разом в конце фрейма. Это называется **async layout**.
+
+Но есть способ сломать эту оптимизацию. Если ты **сначала изменяешь DOM, а потом сразу читаешь геометрические свойства** — браузер не может ждать. Ему нужно вернуть актуальные данные прямо сейчас, поэтому он делает reflow синхронно, прямо посреди выполнения твоего JavaScript.
+
+```javascript
+// ❌ Forced Synchronous Layout
+element.style.width = '200px' // изменили DOM — браузер помечает layout как "грязный"
+const height = element.offsetHeight // читаем геометрию — браузер вынужден сделать reflow СЕЙЧАС
+```
+
+Браузер как бы говорит: _«ты только что что-то изменил, и теперь хочешь узнать размер — мне придётся всё пересчитать прямо сейчас, я не могу дать тебе устаревшие данные»_.
+
+**Свойства которые вызывают forced synchronous layout при чтении:**
+
+```javascript
+// Все эти чтения после изменения DOM вызовут принудительный reflow:
+element.offsetWidth / offsetHeight
+element.clientWidth / clientHeight
+element.scrollWidth / scrollHeight
+element.getBoundingClientRect()
+element.scrollTop / scrollLeft
+window.getComputedStyle(element)
+```
+
+**Правильный подход** — разделить чтение и запись:
+
+```javascript
+// ✅ Сначала читаем все геометрические данные
+const height = element.offsetHeight
+const width = element.offsetWidth
+
+// Потом делаем все изменения
+element.style.height = height * 2 + 'px'
+element.style.width = width * 2 + 'px'
+// Браузер сделает один reflow в конце фрейма
+```
+
+![Timeline: чередование чтений/записей vs батчинг — один reflow](/blog/dom-optimizations-timeline.png)
+
+---
+
+## Layout Thrashing: reflow в цикле
+
+Forced synchronous layout внутри цикла — это **layout thrashing**. Один из самых жестоких убийц производительности, который легко не заметить.
+
+```javascript
+// ❌ Layout thrashing — reflow на каждой итерации
+const items = document.querySelectorAll('.item')
+
+items.forEach((item) => {
+  const width = item.offsetWidth // читаем — reflow
+  item.style.width = width * 2 + 'px' // пишем — DOM "грязный"
+  // следующая итерация: снова читаем offsetWidth → снова reflow
+  // 100 элементов = 100 reflow
+})
+```
+
+На 100 элементах это может занять десятки миллисекунд — достаточно чтобы пропустить фрейм и получить видимый джанк.
+
+```javascript
+// ✅ Читаем всё сразу, потом пишем
+const items = document.querySelectorAll('.item')
+
+// Фаза чтения — один reflow
+const widths = Array.from(items).map((item) => item.offsetWidth)
+
+// Фаза записи — браузер батчит изменения
+items.forEach((item, i) => {
+  item.style.width = widths[i] * 2 + 'px'
+})
+```
+
+Библиотека [FastDOM](https://github.com/wilsonpage/fastdom) автоматизирует этот паттерн, если у тебя много мест где смешиваются чтение и запись:
+
+```javascript
+import fastdom from 'fastdom'
+
+fastdom.measure(() => {
+  const width = element.offsetWidth // чтение в отдельной очереди
+
+  fastdom.mutate(() => {
+    element.style.width = width * 2 + 'px' // запись в отдельной очереди
+  })
+})
+```
+
+---
+
+## Compositor Thread: операции которые браузер делает «бесплатно»
+
+Браузер работает в нескольких потоках. Main thread занимается JavaScript, layout и paint. Но есть **compositor thread** — он работает независимо и отвечает за финальную склейку слоёв.
+
+Если анимация живёт только на compositor thread, она будет работать на 60fps даже когда main thread занят тяжёлым JavaScript. Это ключевое.
+
+**Только два CSS-свойства живут исключительно на compositor thread:**
+
+- `transform`
+- `opacity`
+
+Всё остальное — `top`, `left`, `width`, `height`, `background`, `box-shadow` — тянет за собой layout или paint на main thread.
+
+```css
+/* ❌ Анимация через left — Layout на каждом фрейме */
+@keyframes slide-bad {
+  from {
+    left: 0;
+  }
+  to {
+    left: 300px;
+  }
+}
+
+/* ✅ Анимация через transform — только Composite */
+@keyframes slide-good {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(300px);
+  }
+}
+```
+
+```css
+/* ❌ Fade через visibility/display — триггерит Layout */
+.hidden {
+  display: none;
+}
+
+/* ✅ Fade через opacity — только Composite */
+.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+```
+
+![Main Thread vs Compositor Thread: transform/opacity идут в Composite](/blog/dom-optimizations-compositor.png)
+
+### Продвинутый момент: создание слоёв
+
+Для compositor thread элемент должен находиться на **отдельном слое**. Браузер создаёт слои автоматически для некоторых элементов, но можно подсказать ему явно:
+
+```css
+.animated-element {
+  will-change: transform; /* браузер создаёт отдельный слой заранее */
+}
+```
+
+Но здесь есть ловушка. Каждый слой занимает память GPU. `will-change: transform` на тысяче элементов — это тысяча текстур в видеопамяти. Используй только там где анимация действительно происходит и только пока она происходит:
+
+```javascript
+// Добавляем will-change перед анимацией, убираем после
+element.addEventListener('mouseenter', () => {
+  element.style.willChange = 'transform'
+})
+
+element.addEventListener('animationend', () => {
+  element.style.willChange = 'auto' // освобождаем слой
+})
+```
+
+---
+
+## CSS Containment: изолируй reflow внутри компонента
+
+Малоизвестное, но мощное CSS-свойство. `contain` говорит браузеру: _«изменения внутри этого элемента не влияют на остальную страницу»_. Браузер использует это для оптимизации — reflow происходит только внутри контейнера, не затрагивая остальной DOM.
+
+```css
+.card {
+  contain: layout paint;
+}
+```
+
+- `contain: layout` — изменения геометрии внутри не влияют на внешний layout
+- `contain: paint` — содержимое не рисуется за пределами элемента, браузер может пропустить paint если элемент вне viewport
+- `contain: strict` — включает всё сразу (`layout paint size`)
+
+```css
+/* Практический пример: список карточек */
+.card-list {
+  display: grid;
+}
+
+.card {
+  contain: layout paint;
+  /* Теперь изменение содержимого одной карточки не вызывает
+     reflow всего списка */
+}
+```
+
+![Containment: без contain — reflow по дереву; с contain — изоляция внутри контейнера](/blog/dom-optimizations-containment.png)
+
+---
+
+## content-visibility: браузер пропускает то что не видно
+
+Относительно новое свойство, которое даёт огромный прирост для длинных страниц. `content-visibility: auto` говорит браузеру: _«не рендери этот элемент пока он вне viewport»_.
+
+```css
+.article-section {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 500px; /* примерная высота до рендеринга */
+}
+```
+
+`contain-intrinsic-size` нужен чтобы скроллбар не прыгал — браузер использует это значение как placeholder для высоты до того как элемент отрендерен.
+
+Это особенно эффективно для длинных статей, лент, страниц с большим количеством контента ниже fold:
+
+```css
+/* Каждая секция рендерится только когда входит во viewport */
+.feed-item {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 120px;
+}
+```
+
+Реальные цифры: Google сообщает об ускорении initial render на 7x для длинных страниц. Разумеется, результат зависит от конкретной страницы, но порядок цифр впечатляет.
+
+---
+
+## ResizeObserver vs window resize
+
+Казалось бы, оба способа делают одно и то же — следят за изменением размеров. Но с точки зрения производительности они принципиально разные.
+
+```javascript
+// ❌ window resize — грубый инструмент
+window.addEventListener('resize', () => {
+  const width = element.offsetWidth // forced synchronous layout
+  doSomething(width)
+})
+```
+
+`window resize` срабатывает при любом изменении размера окна и требует явного чтения геометрии через `offsetWidth` и подобные свойства — а это forced synchronous layout.
+
+```javascript
+// ✅ ResizeObserver — наблюдает за конкретным элементом
+const observer = new ResizeObserver((entries) => {
+  for (const entry of entries) {
+    const { width, height } = entry.contentRect
+    // размеры уже вычислены браузером, без forced layout
+    doSomething(width)
+  }
+})
+
+observer.observe(element)
+```
+
+`ResizeObserver` получает размеры уже вычисленными — браузер передаёт их как часть своего нормального layout цикла, без дополнительного forced synchronous layout. Плюс он следит за конкретным элементом, а не за всем окном — меньше лишних вызовов.
+
+Практический пример: компонент который адаптирует своё содержимое под размер контейнера (container queries вручную):
+
+```javascript
+const observer = new ResizeObserver(([entry]) => {
+  const width = entry.contentRect.width
+
+  element.classList.toggle('compact', width < 400)
+  element.classList.toggle('wide', width >= 800)
+})
+
+observer.observe(containerElement)
+
+// Не забываем отписаться
+onUnmount(() => observer.disconnect())
+```
+
+---
+
+## DocumentFragment: батчинг DOM-операций
+
+Когда нужно добавить много элементов в DOM, каждый `appendChild` напрямую в документ — это потенциальный reflow. `DocumentFragment` позволяет собрать все изменения в памяти и применить одной операцией:
+
+```javascript
+// ❌ Reflow на каждом appendChild
+const list = document.getElementById('list')
+
+items.forEach((item) => {
+  const li = document.createElement('li')
+  li.textContent = item.name
+  list.appendChild(li) // reflow при каждом добавлении
+})
+```
+
+```javascript
+// ✅ Один reflow для всех элементов
+const fragment = document.createDocumentFragment()
+
+items.forEach((item) => {
+  const li = document.createElement('li')
+  li.textContent = item.name
+  fragment.appendChild(li) // добавляем в fragment — нет reflow
+})
+
+list.appendChild(fragment) // один reflow для всего
+```
+
+В React это менее актуально — React сам батчит DOM-операции. Но при прямой работе с DOM через `ref` или в ситуациях где React не помогает — `DocumentFragment` остаётся важным инструментом.
+
+---
+
+## React и reflow: где фреймворк не спасает
+
+React виртуальный DOM батчит изменения и применяет их оптимально — это большая часть того, за что мы его любим. Но есть сценарии, где reflow происходит несмотря на React.
+
+**Прямые манипуляции через ref:**
+
+```jsx
+function Component() {
+  const ref = useRef(null)
+
+  useEffect(() => {
+    // Ты напрямую в DOM — React не контролирует это
+    const height = ref.current.offsetHeight // forced layout если до этого был setState
+    ref.current.style.transform = `translateY(${height}px)`
+  })
+
+  return <div ref={ref}>...</div>
+}
+```
+
+**Чтение геометрии после setState:**
+
+```jsx
+function Component() {
+  const [items, setItems] = useState([])
+  const listRef = useRef(null)
+
+  const addItem = () => {
+    setItems((prev) => [...prev, newItem])
+
+    // ❌ React ещё не применил изменения к DOM,
+    // но если бы применил — это был бы forced layout
+    const height = listRef.current.scrollHeight
+    listRef.current.scrollTop = height
+  }
+
+  // ✅ Правильно — читаем геометрию в useLayoutEffect,
+  // который запускается после того как React обновил DOM,
+  // но до того как браузер отрисовал фрейм
+  useLayoutEffect(() => {
+    const height = listRef.current.scrollHeight
+    listRef.current.scrollTop = height
+  }, [items])
+}
+```
+
+`useLayoutEffect` — это именно то место где можно безопасно читать и писать геометрию после React-обновлений, не вызывая видимого мерцания.
+
+---
+
+## Итог
+
+Вся оптимизация производительности браузера сводится к одному принципу: **не заставляй браузер делать работу дважды**.
+
+Группируй чтение и запись DOM-свойств. Анимируй только `transform` и `opacity`. Изолируй reflow через `contain`. Прячь от браузера то, что вне экрана через `content-visibility`. Используй правильные инструменты для наблюдения за размерами.
+
+Но самое важное — понимать _почему_ это работает именно так. Тогда не нужно запоминать правила — они сами следуют из механики.
