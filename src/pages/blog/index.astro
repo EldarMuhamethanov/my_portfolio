@@ -7,10 +7,20 @@ import PageTitle from '../../components/common/PageTitle.astro'
 
 const BLOG_TITLE = 'Блог'
 const BLOG_DESCRIPTION = 'Заметки о разработке, инструментах и опыте'
+const AVERAGE_READING_WPM = 220
 
-const posts = (await getCollection('blog')).sort(
-  (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()
-)
+const posts = (await getCollection('blog'))
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
+  .map((entry) => {
+    const words = entry.body?.split(/\s+/).length ?? 0
+    const readingTimeMinutes =
+      words > 0 ? Math.max(1, Math.ceil(words / AVERAGE_READING_WPM)) : 1
+
+    return {
+      ...entry,
+      readingTimeMinutes,
+    }
+  })
 ---
 
 <BaseLayout title={`${BLOG_TITLE} — Eldar Muhamethanov`} description={BLOG_DESCRIPTION}>
@@ -28,16 +38,17 @@ const posts = (await getCollection('blog')).sort(
                 href={`/blog/${entry.id.replace(/\.(mdx?|md)$/, '')}`}
                 class="group block rounded-2xl border border-border/80 bg-card/50 p-6 transition-all duration-300 hover:border-primary/20 hover:shadow-glow-sm"
               >
-                <time
-                  datetime={entry.data.pubDate.toISOString()}
-                  class="text-sm font-medium text-muted-foreground"
-                >
-                  {entry.data.pubDate.toLocaleDateString('ru-RU', {
-                    day: 'numeric',
-                    month: 'long',
-                    year: 'numeric',
-                  })}
-                </time>
+                <div class="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+                  <time datetime={entry.data.pubDate.toISOString()}>
+                    {entry.data.pubDate.toLocaleDateString('ru-RU', {
+                      day: 'numeric',
+                      month: 'long',
+                      year: 'numeric',
+                    })}
+                  </time>
+                  <span aria-hidden="true">•</span>
+                  <span>{entry.readingTimeMinutes} мин чтения</span>
+                </div>
                 <h2 class="mt-2 text-xl font-semibold tracking-tight text-foreground group-hover:text-primary transition-colors">
                   {entry.data.title}
                 </h2>
