@@ -15,7 +15,7 @@ export async function getStaticPaths() {
 type Props = { entry: CollectionEntry<'blog'> }
 const { entry } = Astro.props as Props
 const { Content, headings } = await entry.render()
-const { title, description, pubDate } = entry.data
+const { title, description, pubDate, tags } = entry.data
 ---
 
 <BaseLayout
@@ -43,18 +43,30 @@ const { title, description, pubDate } = entry.data
             >
               {title}
             </h1>
-            <time
-              datetime={pubDate.toISOString()}
-              class="mt-2 block text-sm text-muted-foreground"
-            >
-              {
-                pubDate.toLocaleDateString('ru-RU', {
-                  day: 'numeric',
-                  month: 'long',
-                  year: 'numeric',
-                })
-              }
-            </time>
+            <div class="mt-2 flex flex-wrap items-center gap-3">
+              <time
+                datetime={pubDate.toISOString()}
+                class="block text-sm text-muted-foreground"
+              >
+                {
+                  pubDate.toLocaleDateString('ru-RU', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric',
+                  })
+                }
+              </time>
+              {tags && tags.length > 0 && (
+                <ul class="flex flex-wrap gap-1.5">
+                  {tags.map((tag) => (
+                    <li class="inline-flex items-center gap-1 text-[11px] font-medium uppercase tracking-wide rounded-full bg-primary/10 px-2.5 py-1 text-primary border border-primary/30 shadow-[0_0_0_1px_rgba(255,255,255,0.03)]">
+                      <span class="w-1.5 h-1.5 rounded-full bg-primary/70" aria-hidden="true" />
+                      {tag}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
           </header>
           <div
             class="prose prose-neutral dark:prose-invert prose-headings:font-bold prose-pre:rounded-xl prose-code:rounded prose-code:px-1 prose-code:py-0.5 prose-code:before:content-none prose-code:after:content-none max-w-none"
