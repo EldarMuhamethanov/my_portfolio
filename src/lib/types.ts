@@ -1,5 +1,6 @@
 export type Page = {
   TITLE: string
+  EXPERIENCE_DURATION: string
   DESCRIPTION: string
 }
 
@@ -37,6 +38,7 @@ export interface ExperienceData {
   link: string
   start: string
   end: string
+  duration: string
   tasks: string[]
   achievements: string[]
   stack: string[]

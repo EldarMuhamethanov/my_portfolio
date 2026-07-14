@@ -5,7 +5,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro'
 import { PROJECTS } from '../../lib/constants'
 
 export async function getStaticPaths() {
-  return [{ params: { id: 'smart-portal' } }, { params: { id: 'markup' } }]
+  return [{ params: { id: 'smart-portal' } }, { params: { id: 'markup' } }, { params: { id: 'ip-scorer' } }]
 }
 
 const { id } = Astro.params

@@ -1,4 +1,5 @@
 import type { ExperienceData, Page, ProjectData, JobStatus } from './types'
+import {experienceDuration} from "@/lib/utils.ts";
 
 export const loaderAnimation = [
   '.loader',
@@ -21,8 +22,11 @@ export const PORTFOLIO_PAGE: Page = {
   DESCRIPTION: 'Коллекция моих проектов и разработок',
 }
 
+const START_WORK = new Date(2020, 0, 1);
+
 export const WORK: Page = {
   TITLE: 'Опыт работы',
+  EXPERIENCE_DURATION: experienceDuration(START_WORK),
   DESCRIPTION: 'Места, где я работал и что делал.',
 }
 
@@ -30,10 +34,11 @@ export const EXPERIENCE: ExperienceData[] = [
   {
     company: 'VK',
     location: 'Россия',
-    position: 'Фронтенд разработчик',
-    start: 'Июнь 2024',
+    position: 'Программист-разработчик',
     link: 'https://vk.com/',
+    start: 'Июнь 2024',
     end: 'Июль 2026',
+    duration: '2 года и 2 месяца',
     achievements: [
         'Добился покрытия unit-тестами 95% кода',
         'Предоставил VKUI инструменты для работы с AI. Пакет vkui-mcp, llms.txt с контекстом для ИИ',
@@ -69,6 +74,7 @@ export const EXPERIENCE: ExperienceData[] = [
     link: 'https://cyrm.ru',
     start: 'Февраль 2024',
     end: 'Май 2024',
+    duration: '4 месяца',
     tasks: [
       'Реализация компонентов для uikit-а продукта',
       'Разработка фич для продуктов компании',
@@ -95,9 +101,10 @@ export const EXPERIENCE: ExperienceData[] = [
     company: 'iSpring',
     link: 'https://www.ispring.ru',
     location: 'Йошкар-Ола, Россия',
-    position: 'Фронтенд разработчик',
+    position: 'Разработчик интерфейсов',
     start: 'Январь 2020',
     end: 'Февраль 2024',
+    duration: '4 года и 2 месяца',
     tasks: [
       'Разработка продуктов для онлайн обучения.',
       'Написание новых компонентов для внутреннего uikit-а, а также доработка существующих.',
@@ -130,6 +137,91 @@ export const EXPERIENCE: ExperienceData[] = [
 ]
 
 export const PROJECTS: ProjectData[] = [
+  {
+    id: 'ip-scorer',
+    name: 'IP Scorer',
+    photos: [
+      '/ip-scorer/logo.png',
+      '/ip-scorer/screen1.png',
+      '/ip-scorer/screen2.png',
+      '/ip-scorer/screen3.png',
+      '/ip-scorer/screen4.png',
+    ],
+    site: 'https://palladium-intelligence.com/ru',
+    githubUrl: '',
+    shortDescription:
+        'IP Scorer - оценка рисков IP-адресов в реальном времени для предотвращения мошенничества',
+    description: [
+      {
+        type: 'header',
+        text: '🛡️ Оценка рисков IP-адресов в реальном времени для предотвращения мошенничества',
+        level: 1,
+      },
+      {
+        type: 'paragraph',
+        text: 'IP Scorer — это низколатентный API для обнаружения VPN, прокси, TOR-узлов, ботов и IP-адресов с высоким уровнем риска. Сервис помогает платформам предотвращать мошенничество, защищать аккаунты пользователей и соблюдать регуляторные требования в реальном времени.',
+      },
+      {
+        type: 'header',
+        text: '✨ Основные возможности',
+        level: 2,
+      },
+      {
+        type: 'list',
+        items: [
+          '📊 Оценка риска IP: комплексная оценка от 0 до 100 на основе множества сигналов угроз и поведенческих паттернов',
+          '🕵️ Обнаружение VPN / Proxy / TOR: идентификация средств анонимизации, включая VPN, прокси, TOR-узлы и хостинг-провайдеров',
+          '🌐 Идентификация ASN и ISP: детальная информация о сети, включая ASN, название ISP, организацию и тип подключения',
+          '🚩 Сигналы абуза и репутации: проверка баз данных абуза в реальном времени и историческая оценка репутации',
+          '⚡ Быстрый и надежный API: среднее время ответа менее 100мс с гарантией SLA 99.99%',
+          '🛠️ Полностью настраиваемый: сканирование портов, DNS-проверки, геолокация и оценка репутации под свои нужды',
+        ],
+      },
+      {
+        type: 'header',
+        text: '⚙️ Как это работает',
+        level: 2,
+      },
+      {
+        type: 'list',
+        items: [
+          '1️⃣ IP-адрес: отправьте IP на API',
+          '2️⃣ Обогащение данных: анализ и обогащение в реальном времени',
+          '3️⃣ Оценка риска: расчет оценки риска от 0 до 100',
+          '4️⃣ Решение: разрешить или заблокировать доступ на основе оценки',
+        ],
+      },
+      {
+        type: 'header',
+        text: '👨‍💻 Удобство для разработчиков',
+        level: 2,
+      },
+      {
+        type: 'list',
+        items: [
+          '🔌 RESTful API с JSON-ответами',
+          '📦 SDK для Python, JavaScript, PHP, Ruby и других языков',
+          '📚 Подробная документация API с примерами',
+          '🚀 Быстрая интеграция — 5 минут до первого вызова API',
+          '🔔 Поддержка вебхуков для асинхронной обработки больших партий запросов',
+        ],
+      },
+      {
+        type: 'header',
+        text: '🎯 Кому подходит',
+        level: 2,
+      },
+      {
+        type: 'list',
+        items: [
+          '💱 Криптобиржи — предотвращение захвата аккаунтов и обнаружение ботов',
+          '📈 Форекс-брокеры — соблюдение нормативных требований и географических ограничений',
+          '🏦 Финтех и банкинг — защита аккаунтов клиентов и мониторинг транзакций',
+        ],
+      },
+    ],
+    stack: ['Next.js', 'React', 'Typescript', 'Vite', 'React Router DOM', 'i18next'],
+  },
   {
     id: 'smart-portal',
     name: 'Smart-portal',
